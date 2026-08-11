@@ -500,10 +500,27 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
   </nav>
 </div>
 <script>
-let SHEET_URL = localStorage.getItem('dmf_sheet_url') || '';
+window.dmfStorage = (function(){
+  try{
+    const testKey='__dmf_test__';
+    window.localStorage.setItem(testKey,'1');
+    window.localStorage.removeItem(testKey);
+    return window.localStorage;
+  }catch(err){
+    console.warn('localStorage no disponible, usando memoria temporal:', err);
+    const mem={};
+    return {
+      getItem:k=>(k in mem? mem[k] : null),
+      setItem:(k,v)=>{mem[k]=String(v);},
+      removeItem:k=>{delete mem[k];}
+    };
+  }
+})();
+
+let SHEET_URL = window.dmfStorage.getItem('dmf_sheet_url') || '';
 
 function getSheetURL(){
-  const saved = localStorage.getItem('dmf_sheet_url');
+  const saved = window.dmfStorage.getItem('dmf_sheet_url');
   if(saved) return saved;
   return '';
 }
@@ -516,7 +533,7 @@ function guardarConfig(){
     return;
   }
   SHEET_URL = raw;
-  localStorage.setItem('dmf_sheet_url', SHEET_URL);
+  window.dmfStorage.setItem('dmf_sheet_url', SHEET_URL);
   document.getElementById('config').style.display='none';
   document.getElementById('app').style.display='block';
   cargarDatos();
@@ -524,7 +541,7 @@ function guardarConfig(){
 }
 
 function abrirConfig(){
-  const savedUrl = localStorage.getItem('dmf_sheet_url')||'';
+  const savedUrl = window.dmfStorage.getItem('dmf_sheet_url')||'';
   document.getElementById('sheet-url-input').value = savedUrl;
   document.getElementById('app').style.display='none';
   document.getElementById('config').style.display='flex';
@@ -655,7 +672,7 @@ function doLogin(){
     document.getElementById('g-quien').value=usr.name;
     syncCustomSelect('g-quien');
     buildCharts();
-    const savedSheet = localStorage.getItem('dmf_sheet_url');
+    const savedSheet = window.dmfStorage.getItem('dmf_sheet_url');
     if(!savedSheet){
       document.getElementById('login').style.display='none';
       document.getElementById('config').style.display='flex';
@@ -1540,7 +1557,7 @@ function actualizarPanelVerificacion(){
 
   // Cargar corte verificado guardado
   const key='dmf_corte_'+anioActual+'_'+mesActual;
-  const saved=safeStorage.getItem(key);
+  const saved=window.dmfStorage.getItem(key);
   if(saved){
     try{
       const d=JSON.parse(saved);
@@ -1590,7 +1607,7 @@ function marcarCorteVerificado(){
   const key='dmf_corte_'+anioActual+'_'+mesActual;
   const fechaStr=hoy.toLocaleDateString('es-MX',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
   const data={realEfec,realBanco,nota,fecha:fechaStr,quien:usuarioActual};
-  safeStorage.setItem(key,JSON.stringify(data));
+  window.dmfStorage.setItem(key,JSON.stringify(data));
   const badge=document.getElementById('corte-verificado-badge');
   badge.style.display='inline-block';
   badge.textContent='✓ Verificado el '+fechaStr+' por '+usuarioActual;
@@ -1796,7 +1813,7 @@ async function descargarDashboardMensual(){
 
     // Verificación de corte si existe
     const key2='dmf_corte_'+anioActual+'_'+mesActual;
-    const savedCorte=safeStorage.getItem(key2);
+    const savedCorte=window.dmfStorage.getItem(key2);
     if(savedCorte){
       try{
         const dc=JSON.parse(savedCorte);
