@@ -742,7 +742,7 @@ function actualizarCorte(){
   const tb=datosMes.reduce((a,x)=>a+x.banco,0);
   const te=datosMes.reduce((a,x)=>a+x.efec,0);
   const mesNombre=hoy.toLocaleDateString('es-MX',{month:'long',year:'numeric'});
-  document.querySelector('.eh-label').innerHTML='<svg class="i-svg i-mr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> Efectivo total en clínicas · '+mesNombre.charAt(0).toUpperCase()+mesNombre.slice(1);
+  document.querySelector('.eh-label').innerHTML='💵 Efectivo total en clínicas · '+mesNombre.charAt(0).toUpperCase()+mesNombre.slice(1);
   document.getElementById('corte-total').textContent=fmt(te);
   document.getElementById('corte-banco').textContent=fmt(tb);
   document.getElementById('corte-ventas').textContent=fmt(tv);
