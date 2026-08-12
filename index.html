@@ -911,7 +911,7 @@ function renderHistorialVerificacion(){
           "<div>Sist: " + fmt(h.sisEfec) + "<br/>Real: " + fmt(h.realEfec) + "<br/><b style=\"color:" + (h.difEfec===0?'var(--green)':'var(--red)') + "\">Dif: " + fmt(h.difEfec) + "</b></div>" +
           "<div>Sist: " + fmt(h.sisBanco) + "<br/>Real: " + fmt(h.realBanco) + "<br/><b style=\"color:" + (h.difBanco===0?'var(--green)':'var(--red)') + "\">Dif: " + fmt(h.difBanco) + "</b></div>" +
         "</div>" +
-        (h.nota ? "<div style=\"margin-top:6px;font-size:11px;color:var(--soft);font-style:italic\">\&"" + h.nota + "\"</div>" : '') +
+        (h.nota ? "<div style=\"margin-top:6px;font-size:11px;color:var(--soft);font-style:italic\">\"" + h.nota + "\"</div>" : '') +
       "</div>";
     }).join('');
 }
