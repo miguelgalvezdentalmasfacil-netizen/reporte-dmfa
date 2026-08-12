@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -50,7 +50,7 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
 .csel-opt:hover{background:var(--bg)}
 .csel-opt.sel{background:var(--blue-s);color:var(--blue);font-weight:700}
 .csel-opt.placeholder{color:var(--soft)}
-.hist-filters .csel{flex:1;min-width:130px;margin-bottom:0}
+.i-svg{width:1.2rem;height:1.2rem;vertical-align:-0.2rem}.i-mr{margin-right:4px}.hist-filters .csel{flex:1;min-width:130px;margin-bottom:0}
 .hist-filters .csel-btn{padding:8px 12px;font-size:13px}
 .add-row .csel{margin-bottom:0}
 .btn{width:100%;padding:16px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-size:17px;font-weight:700;cursor:pointer;-webkit-appearance:none}
@@ -320,8 +320,8 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
     <div id="v-dashboard" class="view" style="display:none">
       <p class="sec">Dashboard mensual</p>
       <div class="hist-filters">
-        <button class="tout" style="width:auto" onclick="descargarMensual()">⬇️ Descargar CSV</button>
-        <button class="tout" style="width:auto" id="btn-dash-pdf" onclick="descargarDashboardMensual()">📄 Descargar PDF</button>
+        <button class="tout" style="width:auto" onclick="descargarMensual()"><svg class="i-svg i-mr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> Descargar CSV</button>
+        <button class="tout" style="width:auto" id="btn-dash-pdf" onclick="descargarDashboardMensual()"><svg class="i-svg i-mr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg> Descargar PDF</button>
       </div>
       <div id="tri-capture">
         <div class="mgrid" id="tri-metrics"></div>
@@ -613,7 +613,7 @@ function buildCustomSelect(selectId,opts){
   const btn=document.createElement('button');
   btn.type='button';
   btn.className='csel-btn';
-  btn.innerHTML='<span class="csel-label"></span><span class="csel-arrow">▾</span>';
+  btn.innerHTML='<span class="csel-label"></span><span class="csel-arrow">▼</span>';
 
   const panel=document.createElement('div');
   panel.className='csel-panel';
