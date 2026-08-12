@@ -918,7 +918,7 @@ function csvEscape(v){
   return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
 }
 
-function descargarMensual(){
+function descargarTrimestre(){
   const sel=document.getElementById('tri-select');
   const qk=sel.value;
   const [yStr,qStr]=qk.split('-Q');
@@ -960,7 +960,7 @@ function descargarMensual(){
   URL.revokeObjectURL(url);
 }
 
-async function descargarDashboardMensual(){
+async function descargarDashboardTrimestral(){
   const btn=document.getElementById('btn-tri-pdf');
   const origText=btn.textContent;
   btn.disabled=true;
