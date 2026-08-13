@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -1855,14 +1855,6 @@ async function descargarDashboardMensual(){
     
     y = doc.lastAutoTable.finalY + 40;
 
-        doc.addImage(imgData,'PNG', margin, y, chartW, chartH);
-        doc.setDrawColor(200,200,200);
-        doc.setLineWidth(0.5);
-        doc.rect(margin, y, chartW, chartH);
-        
-        y += chartH + 40;
-      }catch(e){console.warn('html2canvas error:',e);}
-    }
 
     if(y > pageH - 220) { doc.addPage(); drawHeader(doc); y = 110; }
     
