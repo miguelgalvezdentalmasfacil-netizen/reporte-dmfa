@@ -1516,6 +1516,7 @@ async function descargarDashboardMensual(){
     const pageH=doc.internal.pageSize.getHeight();
     const margin=40;
     
+    // 1. PORTADA/ENCABEZADO
     function addFooter(doc) {
       const pageCount = doc.internal.getNumberOfPages();
       for(let i = 1; i <= pageCount; i++) {
@@ -1535,26 +1536,35 @@ async function descargarDashboardMensual(){
     function drawHeader(doc){
       doc.setFillColor(24,95,165);
       doc.rect(0,0,pageW,80,'F');
-      
-      // Isotipo extraido directamente del archivo adjunto
       doc.addImage("data:image/jpeg;base64,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", 'JPEG', margin, 8, 64, 64);
-      
       doc.setTextColor(255,255,255);
       doc.setFont('helvetica','bold');
       doc.setFontSize(14);
       doc.text('INFORME MENSUAL DE RENDIMIENTO DE VENTAS', margin + 84, 35);
-      
       doc.setFont('helvetica','normal');
       doc.setFontSize(11);
       doc.text('Mes de Evaluaci\u00F3n: '+mesNombreCap, margin + 84, 55);
-      
       doc.setFontSize(9);
       doc.text('Generado el '+hoy.toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'}), margin + 84, 70);
     }
     drawHeader(doc);
+    let y = 110;
+    
+    function drawSectionTitle(doc, title, startY) {
+      if(startY > pageH - 80) { doc.addPage(); drawHeader(doc); startY = 110; }
+      doc.setTextColor(24,95,165);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(12);
+      doc.text(title, margin, startY);
+      doc.setDrawColor(24,95,165);
+      doc.setLineWidth(1);
+      doc.line(margin, startY+5, pageW - margin, startY+5);
+      return startY + 20;
+    }
+
+    function fmt(n){return ''+(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
     const datosMes=datosCarolina.filter(r=>{const f=parseFechaFlexible(r.fecha);return f && f.year===anioActual && f.month===mesActual;});
-    const datosAnt=datosCarolina.filter(r=>{const f=parseFechaFlexible(r.fecha);return f && f.year===anioAnt && f.month===mesAnt;});
     
     const CLS=[
       {key:'Tijuana ,Plaza del Zapato',n:'Plaza del Zapato',c:'Tijuana'},
@@ -1566,248 +1576,45 @@ async function descargarDashboardMensual(){
     const byClinica={}; CLS.forEach(cl=>{byClinica[cl.key]={v:0,e:0,b:0, pct:0};});
     datosMes.forEach(r=>{if(byClinica[r.clinica]!==undefined){byClinica[r.clinica].v+=r.venta||0;byClinica[r.clinica].e+=r.efec||0;byClinica[r.clinica].b+=r.banco||0;}});
     
-    const byClinicaAnt={}; CLS.forEach(cl=>{byClinicaAnt[cl.key]={v:0,e:0,b:0};});
-    datosAnt.forEach(r=>{if(byClinicaAnt[r.clinica]!==undefined){byClinicaAnt[r.clinica].v+=r.venta||0;byClinicaAnt[r.clinica].e+=r.efec||0;byClinicaAnt[r.clinica].b+=r.banco||0;}});
-
     let totalVentas=0, totalEfec=0, totalBanco=0;
-    let totalVentasAnt=0, totalEfecAnt=0, totalBancoAnt=0;
-    let bestCl = null, worstCl = null;
-    let maxPct = -1, minPct = 9999;
-    
     CLS.forEach(cl=>{
        totalVentas+=byClinica[cl.key].v;
        totalEfec+=byClinica[cl.key].e;
        totalBanco+=byClinica[cl.key].b;
-       
-       totalVentasAnt+=byClinicaAnt[cl.key].v;
-       totalEfecAnt+=byClinicaAnt[cl.key].e;
-       totalBancoAnt+=byClinicaAnt[cl.key].b;
-
-       const meta = META_CLINICA || 1;
-       const pct = (byClinica[cl.key].v / meta) * 100;
-       byClinica[cl.key].pct = pct;
-       if(pct > maxPct) { maxPct = pct; bestCl = cl.n; }
-       if(pct < minPct) { minPct = pct; worstCl = cl.n; }
+       const meta = META_CLINICA || 120396.33;
+       byClinica[cl.key].pct = (byClinica[cl.key].v / meta) * 100;
     });
-    
-    if(!bestCl) { bestCl = "N/A"; }
-    if(!worstCl) { worstCl = "N/A"; }
     
     const abrActual=Object.keys(MESES_ABR_MAP)[mesActual-1];
-    const abrAnt=Object.keys(MESES_ABR_MAP)[mesAnt-1];
     const gastosM=gastos.filter(g=>{const f=parseFechaGasto(g.fecha);return f && f.mon===abrActual;});
-    const gastosA=gastos.filter(g=>{const f=parseFechaGasto(g.fecha);return f && f.mon===abrAnt;});
-    
     const totalGastos=gastosM.reduce((a,g)=>a+g.monto,0);
-    const totalGastosAnt=gastosA.reduce((a,g)=>a+g.monto,0);
     const neto=totalEfec-totalGastos;
-    const netoAnt=totalEfecAnt-totalGastosAnt;
-    
-    function fmt(n){return ''+(n||0).toLocaleString('en-US');}
+    const metaG = (META_CLINICA || 120396.33) * 4;
+    const pctMetaG = Math.round(totalVentas/metaG*100);
 
-    const pctMeta=META_TOTAL?Math.round(totalVentas/META_TOTAL*100):0;
-    
-    let varSales = totalVentasAnt > 0 ? ((totalVentas - totalVentasAnt)/totalVentasAnt)*100 : 0;
-    let txtGrowth = varSales >= 0 ? 'un crecimiento del ' + varSales.toFixed(1) + '%' : 'una disminuci\u00F3n del ' + Math.abs(varSales).toFixed(1) + '%';
-    let txtMeta = pctMeta >= 100 ? 'superando la meta general con un ' + pctMeta + '% de cumplimiento.' : 'alcanzando un ' + pctMeta + '% de la meta general.';
-    let resumenText = 'Durante este mes, se registr\u00F3 un total de ventas de ' + fmt(totalVentas) + ', lo que representa ' + txtGrowth + ' respecto al mes anterior, ' + txtMeta + ' La cl\u00EDnica con mejor desempe\u00F1o fue ' + bestCl + ' (' + maxPct.toFixed(1) + '%), mientras que ' + worstCl + ' report\u00F3 el menor alcance (' + minPct.toFixed(1) + '%).';
-
-    let y = 110;
-    doc.setTextColor(24,95,165);
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(12);
-    doc.text('RESUMEN EJECUTIVO', margin, y);
-    doc.setDrawColor(24,95,165);
-    doc.setLineWidth(1);
-    doc.line(margin, y+5, pageW - margin, y+5);
-    y+=20;
-    doc.setTextColor(50,50,50);
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(10);
-    const splitText = doc.splitTextToSize(resumenText, pageW - margin * 2);
-    doc.text(splitText, margin, y);
-    y += (splitText.length * 14) + 20;
-    
-    let generadoPor = 'Direcci\u00F3n Operativa';
-    const userSpan = document.querySelector('.user-info strong');
-    if(userSpan && userSpan.innerText.trim() !== '') {
-       generadoPor = userSpan.innerText.trim();
-    }
-    
+    // 2. RESUMEN GENERAL DEL MES
+    y = drawSectionTitle(doc, 'RESUMEN GENERAL DEL MES', y);
     doc.autoTable({
-      startY: y,
-      margin: {left: margin},
-      tableWidth: 300,
-      body: [
-        ['Mes Evaluado', mesNombreCap],
-        ['Generado por', generadoPor],
-        ['Fecha de Reporte', hoy.toLocaleDateString('es-MX')],
-        ['Estatus Global', pctMeta >= 100 ? 'Meta Cumplida' : 'Por debajo de meta']
-      ],
-      theme: 'grid',
-      styles: {fontSize: 9, cellPadding: 5, textColor: [50,50,50]},
-      columnStyles: {0: {fontStyle: 'bold', fillColor: [240,240,240], cellWidth: 120}}
-    });
-
-    y = Math.max(doc.lastAutoTable ? doc.lastAutoTable.finalY + 30 : 250, 280);
-    
-    doc.setTextColor(24,95,165);
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(12);
-    doc.text('RESUMEN FINANCIERO MENSUAL', margin, y);
-    doc.setDrawColor(24,95,165);
-    doc.setLineWidth(1);
-    doc.line(margin, y+5, pageW-margin, y+5);
-    y+=20;
-    
-    function getVarObj(act, ant) {
-        if(ant===0) return {v:'N/A', c:[50,50,50]};
-        const p = ((act-ant)/ant)*100;
-        const isUp = p >= 0;
-        return {
-            v: (isUp?'+':'') + p.toFixed(1) + '%',
-            c: isUp ? colorVerde : colorRojo
-        };
-    }
-    
-    const vVentas = getVarObj(totalVentas, totalVentasAnt);
-    const vEfec = getVarObj(totalEfec, totalEfecAnt);
-    const vBanco = getVarObj(totalBanco, totalBancoAnt);
-    const vGastos = getVarObj(totalGastos, totalGastosAnt);
-    if(totalGastos > totalGastosAnt) { vGastos.c = colorRojo; } else if(totalGastosAnt > 0) { vGastos.c = colorVerde; }
-    const vNeto = getVarObj(neto, netoAnt);
-    
-    doc.autoTable({
-      startY: y,
-      margin: {left: margin, right: margin},
-      head: [['Concepto', 'Mes Anterior', 'Mes Actual', 'Variaci\u00F3n']],
-      body: [
-        ['Ingresos (Ventas)', fmt(totalVentasAnt), fmt(totalVentas), vVentas],
-        ['Efectivo Registrado', fmt(totalEfecAnt), fmt(totalEfec), vEfec],
-        ['Bancos', fmt(totalBancoAnt), fmt(totalBanco), vBanco],
-        ['Gastos Operativos', fmt(totalGastosAnt), fmt(totalGastos), vGastos],
-        ['Flujo Neto', fmt(netoAnt), fmt(neto), vNeto],
-      ],
+      startY: y, margin: {left: margin, right: margin},
+      head: [['Ventas Totales', 'Efectivo Registrado', 'Bancos Registrados', 'Gastos', 'Neto (Efec - Gastos)', '% Cumplido']],
+      body: [[`$${fmt(totalVentas)}`, `$${fmt(totalEfec)}`, `$${fmt(totalBanco)}`, `$${fmt(totalGastos)}`, `$${fmt(neto)}`, `${pctMetaG}%`]],
       theme: 'grid',
       headStyles: {fillColor: colorAzul, textColor: 255, fontStyle: 'bold', halign: 'center'},
-      styles: {fontSize: 10, cellPadding: 7, textColor: [50,50,50], halign: 'center'},
-      columnStyles: {0: {fontStyle: 'bold', halign: 'left'}},
+      styles: {fontSize: 10, cellPadding: 8, textColor: [50,50,50], halign: 'center'},
       didParseCell: function(data) {
-        if(data.section === 'body' && data.column.index === 3 && data.cell.raw && data.cell.raw.c) {
-            data.cell.styles.textColor = data.cell.raw.c;
-            data.cell.text = data.cell.raw.v;
+        if(data.section === 'body' && data.column.index === 5) {
+          data.cell.styles.textColor = pctMetaG >= 100 ? colorVerde : colorRojo;
+          data.cell.styles.fontStyle = 'bold';
         }
       }
     });
-    
-    y = doc.lastAutoTable.finalY + 40;
+    y = doc.lastAutoTable.finalY + 30;
 
-    const W = {};
-    datosMes.forEach(r => {
-        const f = parseFechaFlexible(r.fecha);
-        if(!f) return;
-        const wk = 'Semana ' + Math.ceil(f.day / 7);
-        if(!W[wk]) W[wk] = {tj: 0, ob: 0, vv: 0, en: 0};
-        if(r.clinica.includes('Tijuana')) W[wk].tj += (r.venta||0);
-        else if(r.clinica.includes('Obregon') || r.clinica.includes('Obreg\u00F3n')) W[wk].ob += (r.venta||0);
-        else if(r.clinica.includes('verde') || r.clinica.includes('Verde')) W[wk].vv += (r.venta||0);
-        else if(r.clinica.includes('Ensenada')) W[wk].en += (r.venta||0);
-    });
-
-    const keysW = Object.keys(W).sort();
-    if(keysW.length > 0 && window.Chart && window.html2canvas) {
-        const container = document.createElement('div');
-        container.style.position = 'fixed';
-        container.style.top = '-9999px';
-        container.style.left = '-9999px';
-        container.style.width = '900px';
-        container.style.backgroundColor = '#ffffff';
-        document.body.appendChild(container);
-        
-        for(const w of keysW) {
-            const d = W[w];
-            if(d.tj === 0 && d.ob === 0 && d.vv === 0 && d.en === 0) continue;
-            
-            const wrap = document.createElement('div');
-            wrap.style.width = '900px';
-            wrap.style.height = '450px';
-            wrap.style.padding = '20px';
-            wrap.style.backgroundColor = '#ffffff';
-            container.appendChild(wrap);
-            
-            const canvas = document.createElement('canvas');
-            wrap.appendChild(canvas);
-            
-            const maxVal = Math.max(1, d.tj, d.ob, d.vv, d.en);
-            const dlBarTop = {anchor:'end',align:'top',color:'#3A4150',font:{weight:'700',size:11},clamp:true,display:c=>c.dataset.data[c.dataIndex]>0,formatter:(v,c)=>[c.dataset.label,fmt(v)]};
-            
-            new Chart(canvas, {
-                type: 'bar',
-                data: {
-                    labels: [w],
-                    datasets: [
-                        {label:'Plaza del Zapato',data:[d.tj],backgroundColor:'#185FA5',borderRadius:4,datalabels:dlBarTop},
-                        {label:'Obreg\u00F3n',data:[d.ob],backgroundColor:'#3B6D11',borderRadius:4,datalabels:dlBarTop},
-                        {label:'Villa Verde',data:[d.vv],backgroundColor:'#EF9F27',borderRadius:4,datalabels:dlBarTop},
-                        {label:'Ensenada',data:[d.en],backgroundColor:'#534AB7',borderRadius:4,datalabels:dlBarTop}
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { ticks: { font: { size: 14 } } },
-                        y: { max: maxVal * 1.35, ticks: { callback: v=>'$'+Math.round(v/1000)+'K', font: { size: 12 } }, grid: { color: 'rgba(0,0,0,.05)' } }
-                    },
-                    layout: { padding: { top: 35 } }
-                }
-            });
-            
-            try {
-                const renderedCanvas = await html2canvas(wrap, {scale:2, backgroundColor:'#ffffff', logging:false});
-                const imgData = renderedCanvas.toDataURL('image/png');
-                const chartW = pageW - margin * 2;
-                const chartH = chartW * (renderedCanvas.height / renderedCanvas.width);
-                
-                if(y + chartH + 50 > pageH) { doc.addPage(); drawHeader(doc); y = 110; }
-                
-                doc.setTextColor(24,95,165);
-                doc.setFont('helvetica','bold');
-                doc.setFontSize(12);
-                doc.text(w.toUpperCase() + ' - GR\u00C1FICA DE VENTAS', margin, y);
-                doc.setDrawColor(24,95,165);
-                doc.setLineWidth(1);
-                doc.line(margin, y+5, pageW-margin, y+5);
-                y += 25;
-                
-                doc.addImage(imgData,'PNG', margin, y, chartW, chartH);
-                doc.setDrawColor(200,200,200);
-                doc.setLineWidth(0.5);
-                doc.rect(margin, y, chartW, chartH);
-                
-                y += chartH + 40;
-            } catch(e) { console.warn('html2canvas error:', e); }
-        }
-        document.body.removeChild(container);
-    }
-    
-    if(y > pageH - 220) { doc.addPage(); drawHeader(doc); y = 110; }
-    
-    doc.setTextColor(24,95,165);
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(12);
-    doc.text('DESEMPE\u00F1O Y CUMPLIMIENTO POR CL\u00CDNICA', margin, y);
-    doc.setDrawColor(24,95,165);
-    doc.setLineWidth(1);
-    doc.line(margin, y+5, pageW-margin, y+5);
-    y+=20;
-    
+    // 3. DESEMPEÑO POR CLÍNICA
+    y = drawSectionTitle(doc, 'DESEMPE\u00F1O POR CL\u00CDNICA', y);
     doc.autoTable({
-      startY: y,
-      margin: {left: margin, right: margin},
-      head: [['Cl\u00EDnica', 'Meta', 'Alcanzado', '% Cumplido', 'Estado', 'Progreso vs Meta']],
+      startY: y, margin: {left: margin, right: margin},
+      head: [['Cl\u00EDnica', 'Ventas', 'Efectivo', 'Banco', 'Meta', '% Cumplido', 'Estado']],
       body: CLS.map(cl => {
         const d = byClinica[cl.key];
         const pct = d.pct;
@@ -1815,15 +1622,14 @@ async function descargarDashboardMensual(){
         let badgeColor = colorVerde;
         if(pct < 100 && pct >= 70) { estado = 'REGULAR'; badgeColor = colorAmbar; }
         if(pct < 70) { estado = 'CR\u00CDTICO'; badgeColor = colorRojo; }
-        
-        return [cl.n, fmt(META_CLINICA), fmt(d.v), pct.toFixed(1) + '%', {e: estado, c: badgeColor}, pct];
+        return [cl.n, `$${fmt(d.v)}`, `$${fmt(d.e)}`, `$${fmt(d.b)}`, `$${fmt(META_CLINICA||120396.33)}`, pct.toFixed(1) + '%', {e: estado, c: badgeColor}];
       }),
       theme: 'striped',
       headStyles: {fillColor: [240,240,240], textColor: colorAzul, fontStyle: 'bold', halign: 'center'},
-      styles: {fontSize: 9.5, cellPadding: 8, textColor: [50,50,50], halign: 'center', valign: 'middle'},
-      columnStyles: {0: {fontStyle: 'bold', halign: 'left'}, 4: {cellWidth: 60}, 5: {cellWidth: 100}},
+      styles: {fontSize: 9.5, cellPadding: 6, textColor: [50,50,50], halign: 'center', valign: 'middle'},
+      columnStyles: {0: {fontStyle: 'bold', halign: 'left'}},
       didDrawCell: function(data) {
-        if (data.section === 'body' && data.column.index === 4) {
+        if (data.section === 'body' && data.column.index === 6) {
             const text = data.cell.raw.e;
             const c = data.cell.raw.c;
             const cx = data.cell.x + data.cell.width / 2;
@@ -1835,139 +1641,311 @@ async function descargarDashboardMensual(){
             doc.setFont('helvetica','bold');
             doc.text(text, cx, cy + 3, {align: 'center'});
         }
-        if (data.section === 'body' && data.column.index === 5) {
-            const pct = Math.min(data.cell.raw, 100);
-            const w = 80;
-            const h = 8;
-            const cx = data.cell.x + 10;
-            const cy = data.cell.y + (data.cell.height / 2) - (h/2);
-            doc.setFillColor(230,230,230);
-            doc.rect(cx, cy, w, h, 'F');
-            doc.setFillColor(24,95,165);
-            doc.rect(cx, cy, w * (pct/100), h, 'F');
-        }
       },
       didParseCell: function(data) {
-        if (data.section === 'body' && (data.column.index === 4 || data.column.index === 5)) {
-            data.cell.text = ''; // clear text so we can draw custom
+        if (data.section === 'body' && data.column.index === 6) {
+            data.cell.text = ''; 
         }
       }
     });
+    y = doc.lastAutoTable.finalY + 30;
     
-    y = doc.lastAutoTable.finalY + 40;
-
-    if(y > pageH - 180) { doc.addPage(); drawHeader(doc); y = 110; }
-    
-    const objY = y;
-    
-    doc.setTextColor(24,95,165);
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(12);
-    doc.text('OBJETIVOS DEL PR\u00D3XIMO MES', margin, y);
-    doc.setDrawColor(24,95,165);
-    doc.setLineWidth(1);
-    doc.line(margin, y+5, 290, y+5);
-    
-    let bullets = [];
-    if(minPct < 100) {
-        bullets.push('\u2022 Reforzar estrategias de venta en ' + worstCl + ' para superar el ' + minPct.toFixed(1) + '% actual.');
-    }
-    if(maxPct >= 100) {
-        bullets.push('\u2022 Mantener el ritmo de cierre de pacientes en ' + bestCl + '.');
-    } else {
-        bullets.push('\u2022 Apoyar a ' + bestCl + ' para alcanzar la meta mensual.');
-    }
-    if(totalGastos > totalGastosAnt) {
-        bullets.push('\u2022 Revisar y optimizar los gastos operativos, que incrementaron vs mes pasado.');
-    } else {
-        bullets.push('\u2022 Mantener el buen control de gastos operativos.');
-    }
-    bullets.push('\u2022 Dar seguimiento a pacientes de ortodoncia inactivos.');
-    
-    doc.setTextColor(50,50,50);
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(10);
-    
-    let by = y + 25;
-    bullets.forEach(b => {
-        const lines = doc.splitTextToSize(b, 240);
-        doc.text(lines, margin, by);
-        by += (lines.length * 16);
+    // 6. METAS CUMPLIDAS
+    y = drawSectionTitle(doc, 'CUMPLIMIENTO DE METAS (VENTAS >= $120,396.33)', y);
+    const metasStatus = CLS.map(cl => {
+      const d = byClinica[cl.key];
+      const diff = d.v - (META_CLINICA || 120396.33);
+      if(diff >= 0) return [cl.n, 'S\u00CD CUMPLI\u00D3', `+ $${fmt(diff)}`];
+      else return [cl.n, 'NO CUMPLI\u00D3', `- $${fmt(Math.abs(diff))}`];
     });
-    
-    doc.setTextColor(24,95,165);
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(12);
-    doc.text('PROYECCI\u00D3N PR\u00D3XIMO MES', 320, objY);
-    doc.setDrawColor(24,95,165);
-    doc.setLineWidth(1);
-    doc.line(320, objY+5, pageW-margin, objY+5);
-    
-    const proyVentas = totalVentas * 1.10;
-    const proyEfec = totalEfec * 1.10;
-    const proyDiff = proyVentas - META_TOTAL;
-    
     doc.autoTable({
-      startY: objY + 15,
-      margin: {left: 320, right: margin},
-      tableWidth: pageW - margin - 320,
-      head: [['Concepto', 'Estimado']],
-      body: [
-        ['Ventas Proyectadas (+10%)', fmt(proyVentas)],
-        ['Efectivo Estimado', fmt(proyEfec)],
-        ['Diferencia vs Meta', (proyDiff >= 0 ? '+' : '') + fmt(proyDiff)],
-      ],
+      startY: y, margin: {left: margin, right: margin},
+      tableWidth: 400,
+      head: [['Cl\u00EDnica', 'Estatus', 'Diferencia']],
+      body: metasStatus,
       theme: 'grid',
-      headStyles: {fillColor: colorMorado, textColor: 255, fontStyle: 'bold'},
-      styles: {fontSize: 9.5, cellPadding: 6, textColor: [50,50,50]},
-      columnStyles: {0: {fontStyle: 'bold'}}
-    });
-    
-    y = Math.max(by, doc.lastAutoTable.finalY) + 40;
-
-    const key2='dmf_corte_'+anioActual+'_'+mesActual;
-    const savedCorte=window.dmfStorage.getItem(key2);
-    if(savedCorte){
-      try{
-        const dc=JSON.parse(savedCorte);
-        if(y>pageH-140){doc.addPage();drawHeader(doc);y=110;}
-        doc.setTextColor(24,95,165);
-        doc.setFont('helvetica','bold');
-        doc.setFontSize(12);
-        doc.text('VERIFICACI\u00D3N DE CORTE (F\u00CDSICO VS SISTEMA)',margin,y);
-        doc.setDrawColor(24,95,165);
-        doc.setLineWidth(1);
-        doc.line(margin, y+5, pageW-margin, y+5);
-        y+=20;
-        const sysEfec=datosMes.reduce((a,x)=>a+x.efec,0);
-        const sysBanco=datosMes.reduce((a,x)=>a+x.banco,0);
-        const difEfec=(dc.realEfec||0)-sysEfec;
-        const difBanco=(dc.realBanco||0)-sysBanco;
-        doc.autoTable({
-          startY:y, margin:{left:margin,right:margin},
-          head:[['Concepto','Sistema','F\u00EDsico recibido','Diferencia']],
-          body:[
-            ['Efectivo',fmt(sysEfec),fmt(dc.realEfec||0),(difEfec>=0?'+':'')+fmt(difEfec)],
-            ['Banco',fmt(sysBanco),fmt(dc.realBanco||0),(difBanco>=0?'+':'')+fmt(difBanco)]
-          ],
-          theme:'grid',
-          headStyles:{fillColor:[24,95,165],textColor:255,fontStyle:'bold', halign:'center'},
-          styles:{fontSize:10,cellPadding:6,textColor:[26,36,51], halign:'center'},
-          columnStyles:{0:{fontStyle:'bold', halign:'left'}},
-          didParseCell: function(data) {
-            if(data.section === 'body' && data.column.index === 3) {
-              const val = parseFloat(data.cell.raw.replace(/[^0-9.-]+/g,""));
-              if(val !== 0) { data.cell.styles.textColor = colorRojo; }
-              else { data.cell.styles.textColor = colorVerde; }
+      headStyles: {fillColor: [240,240,240], textColor: colorAzul, fontStyle: 'bold', halign: 'center'},
+      styles: {fontSize: 9.5, cellPadding: 6, textColor: [50,50,50], halign: 'center', valign: 'middle'},
+      didParseCell: function(data) {
+        if(data.section === 'body') {
+          if(data.row.raw[1] === 'S\u00CD CUMPLI\u00D3') {
+            if(data.column.index === 1 || data.column.index === 2) {
+              data.cell.styles.textColor = colorVerde;
+              data.cell.styles.fontStyle = 'bold';
+            }
+          } else {
+            if(data.column.index === 1 || data.column.index === 2) {
+              data.cell.styles.textColor = colorRojo;
+              data.cell.styles.fontStyle = 'bold';
             }
           }
-        });
-        y=doc.lastAutoTable.finalY+10;
-        doc.setFont('helvetica','normal');
-        doc.setFontSize(9);
-        doc.setTextColor(91,102,120);
-        doc.text('Verificado el '+dc.fecha+' por '+dc.quien+(dc.nota?' \u00B7 Nota: '+dc.nota:''),margin,y);
-      }catch(e){}
+        }
+      }
+    });
+    y = doc.lastAutoTable.finalY + 30;
+
+    // 4 & 5. GRÁFICAS DE PASTEL Y BARRAS
+    if(window.Chart && window.html2canvas) {
+      if(y > pageH - 250) { doc.addPage(); drawHeader(doc); y = 110; }
+      y = drawSectionTitle(doc, 'DISTRIBUCI\u00D3N MENSUAL (GR\u00C1FICAS)', y);
+      
+      const container = document.createElement('div');
+      container.style.position = 'fixed';
+      container.style.top = '-9999px';
+      container.style.left = '-9999px';
+      container.style.width = '1000px';
+      container.style.backgroundColor = '#ffffff';
+      document.body.appendChild(container);
+      
+      // Ventas
+      const wrapVentas = document.createElement('div');
+      wrapVentas.style.width = '450px';
+      wrapVentas.style.height = '450px';
+      wrapVentas.style.padding = '20px';
+      wrapVentas.style.backgroundColor = '#ffffff';
+      wrapVentas.style.display = 'inline-block';
+      container.appendChild(wrapVentas);
+      const canvasV = document.createElement('canvas');
+      wrapVentas.appendChild(canvasV);
+      
+      const vArr = CLS.map(cl => byClinica[cl.key].v);
+      const cols = ['#185FA5', '#3B6D11', '#EF9F27', '#534AB7'];
+      
+      new Chart(canvasV, {
+        type: 'pie',
+        data: {
+            labels: ['Plaza del Zapato', 'Obreg\u00F3n', 'Villa Verde', 'Ensenada'],
+            datasets: [{data: vArr, backgroundColor: cols}]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, animation: false,
+            plugins: {
+                title: { display: true, text: 'Distribución de Ventas', font: {size: 16} },
+                legend: { position: 'bottom' },
+                datalabels: { formatter: (v, c) => { let sum = c.dataset.data.reduce((a,b)=>a+b,0); return sum ? Math.round((v*100)/sum)+'%' : '0%'; }, color: '#fff', font: {weight: 'bold', size:14} }
+            }
+        }
+      });
+      
+      // Efectivo
+      const wrapEfec = document.createElement('div');
+      wrapEfec.style.width = '450px';
+      wrapEfec.style.height = '450px';
+      wrapEfec.style.padding = '20px';
+      wrapEfec.style.backgroundColor = '#ffffff';
+      wrapEfec.style.display = 'inline-block';
+      container.appendChild(wrapEfec);
+      const canvasE = document.createElement('canvas');
+      wrapEfec.appendChild(canvasE);
+      
+      const eArr = CLS.map(cl => byClinica[cl.key].e);
+      new Chart(canvasE, {
+        type: 'pie',
+        data: {
+            labels: ['Plaza del Zapato', 'Obreg\u00F3n', 'Villa Verde', 'Ensenada'],
+            datasets: [{data: eArr, backgroundColor: cols}]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, animation: false,
+            plugins: {
+                title: { display: true, text: 'Distribución de Efectivo', font: {size: 16} },
+                legend: { position: 'bottom' },
+                datalabels: { formatter: (v, c) => { let sum = c.dataset.data.reduce((a,b)=>a+b,0); return sum ? Math.round((v*100)/sum)+'%' : '0%'; }, color: '#fff', font: {weight: 'bold', size:14} }
+            }
+        }
+      });
+      
+      try {
+        const renderedV = await html2canvas(wrapVentas, {scale:2, backgroundColor:'#ffffff', logging:false});
+        const imgV = renderedV.toDataURL('image/png');
+        const renderedE = await html2canvas(wrapEfec, {scale:2, backgroundColor:'#ffffff', logging:false});
+        const imgE = renderedE.toDataURL('image/png');
+        
+        const chartW = 240;
+        const chartH = chartW * (renderedV.height / renderedV.width);
+        
+        doc.addImage(imgV, 'PNG', margin, y, chartW, chartH);
+        doc.addImage(imgE, 'PNG', margin + chartW + 20, y, chartW, chartH);
+        
+        y += chartH + 30;
+      } catch(e) { console.warn('html2canvas error pies:', e); }
+      
+      // Barras
+      const wrapBar = document.createElement('div');
+      wrapBar.style.width = '900px';
+      wrapBar.style.height = '400px';
+      wrapBar.style.padding = '20px';
+      wrapBar.style.backgroundColor = '#ffffff';
+      container.appendChild(wrapBar);
+      const canvasB = document.createElement('canvas');
+      wrapBar.appendChild(canvasB);
+      
+      const maxVal = Math.max(1, ...vArr);
+      new Chart(canvasB, {
+          type: 'bar',
+          data: {
+              labels: ['Ventas por Clínica'],
+              datasets: [
+                  {label:'Plaza del Zapato',data:[vArr[0]],backgroundColor:'#185FA5',borderRadius:4},
+                  {label:'Obreg\u00F3n',data:[vArr[1]],backgroundColor:'#3B6D11',borderRadius:4},
+                  {label:'Villa Verde',data:[vArr[2]],backgroundColor:'#EF9F27',borderRadius:4},
+                  {label:'Ensenada',data:[vArr[3]],backgroundColor:'#534AB7',borderRadius:4}
+              ]
+          },
+          options: {
+              responsive: true, maintainAspectRatio: false, animation: false,
+              plugins: { title: { display: true, text: 'Comparativa de Ventas Mensuales', font: {size: 16} }, legend: { position: 'bottom' } },
+              scales: {
+                  y: { max: maxVal * 1.35, ticks: { callback: v=>'$'+Math.round(v/1000)+'K' }, grid: { color: 'rgba(0,0,0,.05)' } }
+              }
+          }
+      });
+      
+      try {
+        const renderedB = await html2canvas(wrapBar, {scale:2, backgroundColor:'#ffffff', logging:false});
+        const imgB = renderedB.toDataURL('image/png');
+        
+        const chartW = pageW - margin * 2;
+        const chartH = chartW * (renderedB.height / renderedB.width);
+        if(y + chartH > pageH - 40) { doc.addPage(); drawHeader(doc); y = 110; }
+        
+        doc.addImage(imgB, 'PNG', margin, y, chartW, chartH);
+        y += chartH + 30;
+      } catch(e) { console.warn('html2canvas error bar:', e); }
+      
+      document.body.removeChild(container);
+    }
+    
+    // 7. PROYECCIÓN DEL PRÓXIMO MES
+    if(y > pageH - 150) { doc.addPage(); drawHeader(doc); y = 110; }
+    y = drawSectionTitle(doc, 'PROYECCI\u00D3N DEL PR\u00D3XIMO MES', y);
+    
+    const tvArr = datosCarolina.map(x=>x.venta||0);
+    const teArr = datosCarolina.map(x=>x.efec||0);
+    const tbArr = datosCarolina.map(x=>x.banco||0);
+    const diasMes = new Date(anioActual, mesActual, 0).getDate();
+    const diasTrabajables = Math.floor(diasMes * (26/30)); 
+    
+    const proyCls = CLS.map(cl => {
+      const d = datosCarolina.filter(x=>x.clinica===cl.key);
+      const v = d.map(x=>x.venta||0);
+      const e = d.map(x=>x.efec||0);
+      const b = d.map(x=>x.banco||0);
+      const mv = v.length ? v.reduce((a,x)=>a+x,0)/v.length : 0;
+      const me = e.length ? e.reduce((a,x)=>a+x,0)/e.length : 0;
+      const mb = b.length ? b.reduce((a,x)=>a+x,0)/b.length : 0;
+      const proyV = mv * diasTrabajables;
+      const proyE = me * diasTrabajables;
+      const proyB = mb * diasTrabajables;
+      const gastosC = gastos.filter(g=>g.clinica===cl.key);
+      const avgG = gastosC.length ? gastosC.reduce((a,x)=>a+x.monto,0)/gastosC.length : 0;
+      const proyG = (totalGastos/4); 
+      return [cl.n, `$${fmt(proyV)}`, `$${fmt(proyE)}`, `$${fmt(proyB)}`, `$${fmt(proyG)}`];
+    });
+    
+    doc.autoTable({
+      startY: y, margin: {left: margin, right: margin},
+      head: [['Cl\u00EDnica', 'Ventas Estimadas', 'Efectivo Estimado', 'Banco Estimado', 'Gastos Esperados']],
+      body: proyCls,
+      theme: 'striped',
+      headStyles: {fillColor: colorAzul, textColor: 255, fontStyle: 'bold', halign: 'center'},
+      styles: {fontSize: 9.5, cellPadding: 6, textColor: [50,50,50], halign: 'center'},
+      columnStyles: {0: {fontStyle: 'bold', halign: 'left'}}
+    });
+    y = doc.lastAutoTable.finalY + 30;
+
+    // 8. GASTOS DEL MES
+    if(y > pageH - 120) { doc.addPage(); drawHeader(doc); y = 110; }
+    y = drawSectionTitle(doc, 'GASTOS DEL MES', y);
+    if(gastosM.length > 0) {
+      const gastosTable = gastosM.map(g => [g.fecha, g.concepto || '-', g.cat || '-', `$${fmt(g.monto)}`, g.quien || '-']);
+      gastosTable.push(['', '', 'TOTAL GASTOS', `$${fmt(totalGastos)}`, '']);
+      doc.autoTable({
+        startY: y, margin: {left: margin, right: margin},
+        head: [['Fecha', 'Concepto', 'Categor\u00EDa', 'Monto', 'Registr\u00F3']],
+        body: gastosTable,
+        theme: 'grid',
+        headStyles: {fillColor: [240,240,240], textColor: colorAzul, fontStyle: 'bold', halign: 'center'},
+        styles: {fontSize: 9, cellPadding: 5, textColor: [50,50,50], halign: 'center'},
+        columnStyles: {1: {halign: 'left'}, 2: {halign: 'left'}},
+        didParseCell: function(data) {
+          if(data.section === 'body' && data.row.index === gastosTable.length - 1) {
+            data.cell.styles.fontStyle = 'bold';
+            data.cell.styles.fillColor = [245,245,245];
+          }
+        }
+      });
+      y = doc.lastAutoTable.finalY + 30;
+    } else {
+      doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(100,100,100);
+      doc.text('No hay gastos registrados en este mes.', margin, y);
+      y += 30;
+    }
+
+    // 9. VERIFICACIÓN DE CORTES
+    if(y > pageH - 120) { doc.addPage(); drawHeader(doc); y = 110; }
+    y = drawSectionTitle(doc, 'VERIFICACI\u00D3N DE CORTES (HISTORIAL)', y);
+    
+    let vOk = 0, vDif = 0, vSin = 0, vTotalMonto = 0;
+    datosMes.forEach(d => {
+      const key = d.capturado + '||' + d.clinica + '||' + d.fecha;
+      const v = verificaciones.find(x => x.key === key);
+      let estado = v ? (v.estado || 'sin_revisar') : 'sin_revisar';
+      if(estado === 'coincide') vOk++;
+      else if(estado === 'no_coincide') { vDif++; vTotalMonto += (v.montoFaltante || 0); }
+      else vSin++;
+    });
+    
+    doc.autoTable({
+      startY: y, margin: {left: margin, right: margin},
+      tableWidth: 400,
+      head: [['Estado', 'Cantidad de Cortes', 'Monto Faltante Detectado']],
+      body: [
+        ['Coinciden (\u2713)', vOk, '-'],
+        ['No Coinciden (\u2717)', vDif, `$${fmt(vTotalMonto)}`],
+        ['Sin Revisar', vSin, '-']
+      ],
+      theme: 'grid',
+      headStyles: {fillColor: [240,240,240], textColor: colorAzul, fontStyle: 'bold', halign: 'center'},
+      styles: {fontSize: 9.5, cellPadding: 6, textColor: [50,50,50], halign: 'center'},
+      columnStyles: {0: {fontStyle: 'bold', halign: 'left'}},
+      didParseCell: function(data) {
+        if(data.section === 'body') {
+          if(data.row.index === 0) data.cell.styles.textColor = colorVerde;
+          else if(data.row.index === 1) data.cell.styles.textColor = colorRojo;
+          else if(data.row.index === 2) data.cell.styles.textColor = [150,150,150];
+        }
+      }
+    });
+    y = doc.lastAutoTable.finalY + 30;
+
+    // 10. DEUDA
+    if(typeof DEUDA_TOTAL !== 'undefined' && DEUDA_TOTAL !== null) {
+      if(y > pageH - 120) { doc.addPage(); drawHeader(doc); y = 110; }
+      y = drawSectionTitle(doc, 'ESTADO DE DEUDA', y);
+      
+      const reembolsos=gastos.filter(g=>g.cat==='Reembolso deuda');
+      const abonoTj=reembolsos.filter(g=>g.clinica==='Tijuana ,Plaza del Zapato').reduce((a,g)=>a+g.monto,0);
+      const abonoObr=reembolsos.filter(g=>g.clinica==='Mexicali, Av Alvaro Obregon 771').reduce((a,g)=>a+g.monto,0);
+      const abonoVv=reembolsos.filter(g=>g.clinica==='Mexicali, Rio verde 631').reduce((a,g)=>a+g.monto,0);
+      const abonoEns=reembolsos.filter(g=>g.clinica==='Ensenada, Av Ruiz 631').reduce((a,g)=>a+g.monto,0);
+      const totalAbonado=abonoTj+abonoObr+abonoVv+abonoEns;
+      const pendiente=Math.max(0,DEUDA_TOTAL-totalAbonado);
+      
+      doc.autoTable({
+        startY: y, margin: {left: margin, right: margin},
+        head: [['Concepto', 'Monto']],
+        body: [
+          ['Deuda Inicial', `$${fmt(DEUDA_TOTAL)}`],
+          ['Abonado Total', `$${fmt(totalAbonado)}`],
+          ['Pendiente', `$${fmt(pendiente)}`]
+        ],
+        theme: 'grid',
+        headStyles: {fillColor: colorMorado, textColor: 255, fontStyle: 'bold'},
+        styles: {fontSize: 9.5, cellPadding: 6, textColor: [50,50,50]},
+        columnStyles: {0: {fontStyle: 'bold'}}
+      });
+      y = doc.lastAutoTable.finalY + 30;
     }
 
     addFooter(doc);
@@ -1981,6 +1959,7 @@ async function descargarDashboardMensual(){
     btn.disabled=false;
   }
 }
+
 </script>
 </body>
 </html>
