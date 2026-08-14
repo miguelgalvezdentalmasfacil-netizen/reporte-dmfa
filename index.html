@@ -218,7 +218,6 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
     <button class="dtab" data-tab="metas">🎯 Metas</button>
     <button class="dtab" data-tab="anual">📈 Anual</button>
     <button class="dtab" data-tab="dashboard">📈 Dashboard</button>
-    <button class="dtab" data-tab="verificar">✅ Verificar</button>
     <button class="dtab" data-tab="gastos">💸 Gastos</button>
     <button class="dtab" data-tab="proyeccion">🔮 Proyección</button>
     <button class="dtab" data-tab="deuda">🏦 Deuda</button>
@@ -272,7 +271,7 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
 
     <!-- METAS -->
     <div id="v-metas" class="view" style="display:none">
-      <p class="sec" id="metas-header">Meta mensual por clínica · $361,189.04 c/u</p>
+      <p class="sec" id="metas-header">Meta mensual por clínica · $120,396.33 c/u</p>
       <div class="mgrid">
         <div class="mc blue"><div class="ml">Plaza del Zapato</div><div class="mv" id="mt-tj-v">—</div><div class="ms" id="mt-tj-p">— de meta</div></div>
         <div class="mc green"><div class="ml">Obregón</div><div class="mv" id="mt-ob-v">—</div><div class="ms" id="mt-ob-p">— de meta</div></div>
@@ -302,7 +301,7 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
         <div class="mc green"><div class="ml">Efectivo total</div><div class="mv" id="an-efec">—</div></div>
         <div class="mc amber"><div class="ml">Mejor mes</div><div class="mv" id="an-mejor-mes">—</div><div class="ms" id="an-mejor-val">—</div></div>
       </div>
-      <div class="note" id="an-meta-note">Meta mensual por clínica: $361,189.04 · Meta mensual total (4 clínicas): $1,444,756.17</div>
+      <div class="note" id="an-meta-note">Meta mensual por clínica: $120,396.33 · Meta mensual total (4 clínicas): $1,444,756.17</div>
       <div class="legend">
         <span class="ld"><span class="ldot" style="background:var(--blue)"></span>Plaza del Zapato</span>
         <span class="ld"><span class="ldot" style="background:var(--green)"></span>Obregón</span>
@@ -438,7 +437,7 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
     <!-- PROYECCI\xd3N -->
     <div id="v-proyeccion" class="view" style="display:none">
       <div class="proj-hero">
-        <div class="ph-head"><div class="ph-icon">📈</div><div><div class="ph-title" id="pj-titulo">Proyección próximo mes</div><div class="ph-sub">Tendencia de los últimos 3 meses · meta $361,189.04 por clínica</div></div></div>
+        <div class="ph-head"><div class="ph-icon">📈</div><div><div class="ph-title" id="pj-titulo">Proyección próximo mes</div><div class="ph-sub">Tendencia de los últimos 3 meses · meta $120,396.33 por clínica</div></div></div>
         <div class="mgrid">
           <div class="mc blue" style="background:rgba(255,255,255,.7)"><div class="ml">Ventas proyectadas</div><div class="mv" id="pj-ventas">—</div><div class="ms" id="pj-pct">— de meta</div></div>
           <div class="mc green" style="background:rgba(255,255,255,.7)"><div class="ml">Efectivo estimado</div><div class="mv" id="pj-efec">—</div></div>
@@ -446,7 +445,7 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
           <div class="mc red" style="background:rgba(255,255,255,.7)"><div class="ml">Gastos esperados</div><div class="mv" id="pj-gastos">—</div></div>
         </div>
       </div>
-      <p class="sec">Por clínica · meta $361,189.04 c/u</p>
+      <p class="sec">Por clínica · meta $120,396.33 c/u</p>
       <div class="cgrid" id="pj-clinicas">
         <div class="spinner-wrap"><div class="spinner"></div> Cargando…</div>
       </div>
@@ -497,7 +496,6 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
     <button class="bntab" data-tab="metas"><span class="icon">🎯</span>Metas</button>
     <button class="bntab" data-tab="anual"><span class="icon">📈</span>Anual</button>
     <button class="bntab" data-tab="dashboard"><span class="icon">📈</span>Dashboard</button>
-    <button class="bntab" data-tab="verificar"><span class="icon">✅</span>Verificar</button>
     <button class="bntab" data-tab="gastos"><span class="icon">💸</span>Gastos</button>
     <button class="bntab" data-tab="proyeccion"><span class="icon">🔮</span>Proyección</button>
     <button class="bntab" data-tab="deuda"><span class="icon">🏦</span>Deuda</button>
@@ -556,7 +554,7 @@ const fmt2=v=>'$'+parseFloat(v||0).toLocaleString('es-MX',{minimumFractionDigits
 const bc=p=>p>=100?'#3B6D11':p>=80?'#EF9F27':'#E24B4A';
 // Meta mensual única por clínica-ciudad. Todo (Metas, Resumen, Anual, Proyección) gira
 // en torno a esta cifra por clínica. La sección de Deuda NO usa esta meta.
-const META_CLINICA = 361189.042;
+const META_CLINICA = 120396.33;
 const CLINICAS_META=[
   {k:'Tijuana ,Plaza del Zapato',n:'Plaza del Zapato',c:'Tijuana',code:'tj',s:'blue-s',color:'#185FA5',meta:META_CLINICA},
   {k:'Mexicali, Av Alvaro Obregon 771',n:'Obregón',c:'Mexicali',code:'ob',s:'green-s',color:'#3B6D11',meta:META_CLINICA},
@@ -569,7 +567,7 @@ const META_TOTAL = META_CLINICA * CLINICAS_META.length;
 // y automáticamente se calculará el pendiente y los porcentajes reales.
 const DEUDA_TOTAL = null;
 const MESES_ABR_MAP={ene:'Enero',feb:'Febrero',mar:'Marzo',abr:'Abril',may:'Mayo',jun:'Junio',jul:'Julio',ago:'Agosto',sep:'Septiembre',oct:'Octubre',nov:'Noviembre',dic:'Diciembre'};
-let gastos=[],chartsBuilt=false,datosCarolina=[],usuarioActual='';
+let gastos=[],chartsBuilt=false,datosCarolina=[],verificaciones=[],usuarioActual='';
 
 /* ---- Selector personalizado (csel): reemplaza el <select> nativo por un dropdown propio ---- */
 const CSEL_OPTS={};
@@ -713,6 +711,7 @@ async function cargarDatos(){
     if(!json || !Array.isArray(json.ventas)) throw new Error('Respuesta inesperada del Apps Script');
     datosCarolina = json.ventas;
     gastos = Array.isArray(json.gastos) ? json.gastos : [];
+    verificaciones = Array.isArray(json.verificaciones) ? json.verificaciones : [];
     actualizarCorte();
     renderHistorial();
     renderResumen();
@@ -759,168 +758,22 @@ function actualizarCorte(){
     document.getElementById(ids.b).textContent=fmt(d.reduce((a,x)=>a+x.banco,0));
     document.getElementById(ids.v).textContent=fmt(d.reduce((a,x)=>a+x.venta,0));
   });
-  actualizarPanelVerificacion();
+  
 }
 
-function actualizarPanelVerificacion(){
-  const hoy=new Date();
-  const anioActual=hoy.getFullYear(), mesActual=hoy.getMonth()+1;
-  const datosMes=datosCarolina.filter(r=>{
-    const f=parseFechaFlexible(r.fecha);
-    return f && f.year===anioActual && f.month===mesActual;
-  });
-  const te=datosMes.reduce((a,x)=>a+(x.efec||0),0);
-  const tb=datosMes.reduce((a,x)=>a+(x.banco||0),0);
-  
-  const elEfec = document.getElementById('cv-sis-efec');
-  const elBanco = document.getElementById('cv-sis-banco');
-  if(elEfec) {
-      elEfec.textContent = fmt(te);
-      elEfec.dataset.val = te;
-  }
-  if(elBanco) {
-      elBanco.textContent = fmt(tb);
-      elBanco.dataset.val = tb;
-  }
-  
-  calcDiferencia();
-  renderHistorialVerificacion();
-}
 
-function calcDiferencia(){
-  const elEfec = document.getElementById('cv-sis-efec');
-  const elBanco = document.getElementById('cv-sis-banco');
-  if(!elEfec || !elBanco) return;
 
-  const sisEfec = parseFloat(elEfec.dataset.val || 0);
-  const sisBanco = parseFloat(elBanco.dataset.val || 0);
-  
-  const inEfec = document.getElementById('cv-real-efec').value;
-  const inBanco = document.getElementById('cv-real-banco').value;
-  
-  const dBox = document.getElementById('cv-dif-box');
-  if(!inEfec && !inBanco) {
-    if(dBox) dBox.style.display='none';
-    return;
-  }
-  
-  if(dBox) dBox.style.display='block';
-  
-  const realEfec = parseFloat(inEfec || 0);
-  const realBanco = parseFloat(inBanco || 0);
-  
-  const difEfec = realEfec - sisEfec;
-  const difBanco = realBanco - sisBanco;
-  
-  const eBox = document.getElementById('cv-dif-efec');
-  const bBox = document.getElementById('cv-dif-banco');
-  
-  if(eBox) {
-      eBox.textContent = (difEfec > 0 ? '+' : '') + fmt(difEfec);
-      eBox.style.color = difEfec === 0 ? 'var(--green)' : 'var(--red)';
-  }
-  if(bBox) {
-      bBox.textContent = (difBanco > 0 ? '+' : '') + fmt(difBanco);
-      bBox.style.color = difBanco === 0 ? 'var(--green)' : 'var(--red)';
-  }
-  
-  if(dBox) {
-      dBox.style.borderColor = (difEfec === 0 && difBanco === 0) ? 'var(--green-s)' : 'var(--red-s)';
-      dBox.style.backgroundColor = (difEfec === 0 && difBanco === 0) ? 'var(--green-s)' : 'var(--red-s)';
-  }
-}
 
-function marcarCorteVerificado(){
-  const inEfec = document.getElementById('cv-real-efec').value;
-  const inBanco = document.getElementById('cv-real-banco').value;
-  if(!inEfec || !inBanco) {
-    alert("Por favor ingresa los montos físicos recibidos antes de verificar.");
-    return;
-  }
-  
-  const hoy = new Date();
-  const mesNombre = hoy.toLocaleDateString('es-MX',{month:'long',year:'numeric'});
-  const sisEfec = parseFloat(document.getElementById('cv-sis-efec').dataset.val || 0);
-  const sisBanco = parseFloat(document.getElementById('cv-sis-banco').dataset.val || 0);
-  const difEfec = parseFloat(inEfec) - sisEfec;
-  const difBanco = parseFloat(inBanco) - sisBanco;
-  
-  const nota = document.getElementById('cv-nota').value;
-  
-  const registro = {
-    fecha: hoy.toLocaleString('es-MX'),
-    mes: mesNombre,
-    sisEfec: sisEfec, sisBanco: sisBanco,
-    realEfec: parseFloat(inEfec), realBanco: parseFloat(inBanco),
-    difEfec: difEfec, difBanco: difBanco, nota: nota
-  };
-  
-  let hist = [];
-  try {
-    const raw = window.dmfStorage.getItem('verif_corte');
-    if(raw) hist = JSON.parse(raw);
-  } catch(e){}
-  
-  hist.unshift(registro); 
-  window.dmfStorage.setItem('verif_corte', JSON.stringify(hist));
-  
-  alert("Corte de " + mesNombre + " marcado como verificado.");
-  
-  document.getElementById('cv-real-efec').value = '';
-  document.getElementById('cv-real-banco').value = '';
-  document.getElementById('cv-nota').value = '';
-  calcDiferencia();
-  renderHistorialVerificacion();
-}
 
-function renderHistorialVerificacion(){
-  let hist = [];
-  try {
-    const raw = window.dmfStorage.getItem('verif_corte');
-    if(raw) hist = JSON.parse(raw);
-  } catch(e){}
-  
-  const badge = document.getElementById('corte-verificado-badge');
-  const hoy = new Date();
-  const mesNombre = hoy.toLocaleDateString('es-MX',{month:'long',year:'numeric'});
-  const esteMes = hist.find(h => h.mes === mesNombre);
-  if(badge) {
-      if(esteMes) {
-        badge.style.display = 'inline-block';
-        badge.textContent = 'Verificado el ' + esteMes.fecha.split(',')[0];
-      } else {
-        badge.style.display = 'none';
-      }
-  }
-  
-  const list = document.getElementById('cv-historial');
-  if(!list) return;
 
-  if(!hist.length) {
-    list.innerHTML = '<i>No hay cortes verificados aún.</i>';
-    return;
-  }
-  
-  list.innerHTML = '<h4 style="margin-bottom:8px">Historial de verificaciones</h4>' + 
-    hist.map(h => {
-      const ok = (h.difEfec === 0 && h.difBanco === 0);
-      const color = ok ? 'var(--green)' : 'var(--red)';
-      return "<div style=\"padding:10px;border-radius:8px;background:var(--card);margin-bottom:8px;border-left:4px solid " + color + "\">" +
-        "<div style=\"font-weight:700;margin-bottom:4px\">" + h.mes + " <span style=\"font-weight:400;font-size:11px;color:var(--soft)\">(" + h.fecha + ")</span></div>" +
-        "<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px\">" +
-          "<div>Sist: " + fmt(h.sisEfec) + "<br/>Real: " + fmt(h.realEfec) + "<br/><b style=\"color:" + (h.difEfec===0?'var(--green)':'var(--red)') + "\">Dif: " + fmt(h.difEfec) + "</b></div>" +
-          "<div>Sist: " + fmt(h.sisBanco) + "<br/>Real: " + fmt(h.realBanco) + "<br/><b style=\"color:" + (h.difBanco===0?'var(--green)':'var(--red)') + "\">Dif: " + fmt(h.difBanco) + "</b></div>" +
-        "</div>" +
-        (h.nota ? "<div style=\"margin-top:6px;font-size:11px;color:var(--soft);font-style:italic\">\"" + h.nota + "\"</div>" : '') +
-      "</div>";
-    }).join('');
-}
+
+
 
 function renderHistorial(){
   const cl=document.getElementById('f-cl').value;
   const list=document.getElementById('hist-list');
-
   const tots=document.getElementById('hist-totales');
+  
   if(!cl){
     list.innerHTML='<div class="empty">👆 Selecciona una clínica arriba (o "Todas las clínicas") para ver su historial.</div>';
     tots.innerHTML='';
@@ -928,14 +781,116 @@ function renderHistorial(){
   }
   let datos=[...datosCarolina].reverse();
   if(cl!=='__todas__') datos=datos.filter(d=>d.clinica===cl);
+  
   if(!datos.length){list.innerHTML='<div class="empty">📭 Sin registros.</div>';tots.innerHTML='';return;}
+  
   const tv=datos.reduce((a,x)=>a+x.venta,0);
   const tb=datos.reduce((a,x)=>a+x.banco,0);
   const te=datos.reduce((a,x)=>a+x.efec,0);
-  tots.innerHTML=`<div class="mc blue"><div class="ml">Total ventas</div><div class="mv">${fmt(tv)}</div></div><div class="mc blue"><div class="ml">Total banco</div><div class="mv">${fmt(tb)}</div></div><div class="mc green"><div class="ml">Total efectivo</div><div class="mv">${fmt(te)}</div></div><div class="mc amber"><div class="ml">Registros</div><div class="mv">${datos.length}</div></div>`;
+  
+  let countOk = 0, countDif = 0, countSin = 0;
+  
   const COLS={'Tijuana ,Plaza del Zapato':'#185FA5','Mexicali, Av Alvaro Obregon 771':'#3B6D11','Mexicali, Rio verde 631':'#EF9F27','Ensenada, Av Ruiz 631':'#534AB7'};
-  list.innerHTML=datos.map(d=>`<div class="hrow"><div class="hcl"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${COLS[d.clinica]||'#999'};margin-right:6px;vertical-align:middle"></span>${d.clinica.replace(',','·')}</div><div class="hmeta">📅 ${d.fecha} · ${d.capturado}${d.nota?' · '+d.nota:''}</div><div class="hvals"><span class="hv v">💰 ${fmt(d.venta)}</span><span class="hv b">🏦 ${fmt(d.banco)}</span><span class="hv e">💵 ${fmt(d.efec)}</span></div></div>`).join('');
+  
+  const htmlList = datos.map(d => {
+    const key = d.capturado + '||' + d.clinica + '||' + d.fecha;
+    const v = verificaciones.find(x => x.key === key);
+    
+    let badgeHtml = '<span class="badge" style="background:#E4E7EC;color:var(--soft)">Sin revisar</span>';
+    if(v) {
+      if(v.verificado) {
+        badgeHtml = '<span class="badge ok">✓ Coincide</span>';
+        countOk++;
+      } else {
+        badgeHtml = '<span class="badge no">✗ Faltó $' + fmt(v.montoFaltante) + '</span>';
+        countDif++;
+      }
+    } else {
+      countSin++;
+    }
+    
+    const keySafe = key.replace(/'/g, "\\'");
+    
+    return `<div class="hrow">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div class="hcl"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${COLS[d.clinica]||'#999'};margin-right:6px;vertical-align:middle"></span>${d.clinica.replace(',','·')}</div>
+        ${badgeHtml}
+      </div>
+      <div class="hmeta">📅 ${d.fecha} · ${d.capturado}${d.nota?' · '+d.nota:''}</div>
+      <div class="hvals" style="margin-bottom:12px">
+        <span class="hv v">💰 ${fmt(d.venta)}</span><span class="hv b">🏦 ${fmt(d.banco)}</span><span class="hv e">💵 ${fmt(d.efec)}</span>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <button class="add-btn" style="background:var(--green-s);color:var(--green);font-size:12px;padding:6px 12px" onclick="guardarVerificacion('${keySafe}', true, 0, this)">✓ Coincide</button>
+        <button class="add-btn" style="background:var(--red-s);color:var(--red);font-size:12px;padding:6px 12px" onclick="mostrarInputFaltante(this)">✗ No coincide</button>
+        <div class="faltante-box" style="display:none;align-items:center;gap:6px;margin-top:4px;width:100%">
+          <input type="number" placeholder="¿Cuánto faltó? ($)" style="width:140px;padding:6px 10px;font-size:12px;margin:0" step="0.01">
+          <button class="add-btn" style="background:var(--blue);color:#fff;font-size:12px;padding:6px 12px" onclick="enviarNoCoincide('${keySafe}', this)">Guardar</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  
+  tots.innerHTML=`
+    <div style="grid-column:1/-1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:4px;display:flex;gap:12px;font-size:12px;font-weight:600">
+      <span style="color:var(--green)">✓ ${countOk} verificados</span>
+      <span style="color:var(--red)">✗ ${countDif} con dif.</span>
+      <span style="color:var(--soft)">⏳ ${countSin} sin revisar</span>
+    </div>
+    <div class="mc blue"><div class="ml">Total ventas</div><div class="mv">${fmt(tv)}</div></div>
+    <div class="mc blue"><div class="ml">Total banco</div><div class="mv">${fmt(tb)}</div></div>
+    <div class="mc green"><div class="ml">Total efectivo</div><div class="mv">${fmt(te)}</div></div>
+    <div class="mc amber"><div class="ml">Registros</div><div class="mv">${datos.length}</div></div>
+  `;
+  list.innerHTML = htmlList;
 }
+
+function mostrarInputFaltante(btn) {
+  const box = btn.nextElementSibling;
+  box.style.display = box.style.display === 'none' ? 'flex' : 'none';
+}
+
+function enviarNoCoincide(key, btn) {
+  const input = btn.previousElementSibling;
+  const val = parseFloat(input.value);
+  if(isNaN(val) || val <= 0) { alert('Ingresa un monto faltante válido mayor a 0'); return; }
+  guardarVerificacion(key, false, val, btn);
+}
+
+async function guardarVerificacion(key, verificado, montoFaltante, btn) {
+  const originalText = btn.textContent;
+  btn.textContent = '⏳...';
+  btn.disabled = true;
+  try {
+    const params = new URLSearchParams();
+    params.append('action', 'verificar');
+    params.append('key', key);
+    params.append('verificado', verificado);
+    params.append('montoFaltante', montoFaltante);
+    params.append('nota', '');
+    params.append('quien', usuarioActual);
+    
+    const r = await fetch(SHEET_URL, {
+        method:'POST', 
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: params
+    });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    
+    // Update local state
+    const vIdx = verificaciones.findIndex(x => x.key === key);
+    const newVal = {key, verificado, montoFaltante, nota:'', quien:usuarioActual};
+    if(vIdx >= 0) verificaciones[vIdx] = newVal;
+    else verificaciones.push(newVal);
+    
+    renderHistorial();
+  } catch(e) {
+    alert('Error al guardar: ' + e.message);
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
 
 function renderResumen(){
   const tv=datosCarolina.reduce((a,x)=>a+x.venta,0);
@@ -1589,9 +1544,7 @@ function marcarCorteVerificado(){
 // Llamar actualizarPanelVerificacion cuando se carguen datos
 const _origCargarDatos=cargarDatos;
 // ya integrado arriba, pero aseguramos que se llame
-function actualizarVerificacionEnDatos(){
-  if(document.getElementById('cv-sis-efec')) actualizarPanelVerificacion();
-}
+
 
 // =====================================================
 // DESCARGA CSV MENSUAL
