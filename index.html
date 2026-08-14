@@ -392,48 +392,6 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
 
     </div>
 
-    <!-- VERIFICACI\xd3N DE CORTE -->
-    <div id="v-verificar" class="view" style="display:none">
-      <p class="sec">Verificación de corte mensual</p>
-      <div class="gastos-card">
-        <div class="gh"><h3>Verificar efectivo físico recibido</h3><span id="corte-verificado-badge" style="display:none;background:var(--green-s);color:var(--green);padding:4px 12px;border-radius:14px;font-size:12px;font-weight:700"></span></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-          <div>
-            <label style="font-size:12px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:block">Efectivo según sistema</label>
-            <div style="font-size:22px;font-weight:800;color:var(--green)" id="cv-sis-efec">—</div>
-          </div>
-          <div>
-            <label style="font-size:12px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:block">Banco según sistema</label>
-            <div style="font-size:22px;font-weight:800;color:var(--blue)" id="cv-sis-banco">—</div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-          <div>
-            <label>Efectivo físico recibido ($)</label>
-            <input type="number" id="cv-real-efec" placeholder="0.00" min="0" step="0.01" inputmode="decimal" oninput="calcDiferencia()" style="margin-bottom:0"/>
-          </div>
-          <div>
-            <label>Banco físico recibido ($)</label>
-            <input type="number" id="cv-real-banco" placeholder="0.00" min="0" step="0.01" inputmode="decimal" oninput="calcDiferencia()" style="margin-bottom:0"/>
-          </div>
-        </div>
-        <div id="cv-dif-box" style="display:none;border-radius:12px;padding:14px;margin-bottom:14px;border:2px solid">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:14px">
-            <span>Diferencia efectivo</span><span id="cv-dif-efec" style="font-weight:800">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:14px">
-            <span>Diferencia banco</span><span id="cv-dif-banco" style="font-weight:800">—</span>
-          </div>
-        </div>
-        <div style="margin-bottom:14px">
-          <label>Nota / explicación de diferencia (opcional)</label>
-          <input type="text" id="cv-nota" placeholder="Ej: faltaron $500 en Obregón, sobraron $200 en Tijuana…" style="margin-bottom:0"/>
-        </div>
-        <button class="btn" onclick="marcarCorteVerificado()" style="max-width:260px">✓ Marcar corte como verificado</button>
-        <div id="cv-historial" style="margin-top:16px;font-size:12px;color:var(--soft)"></div>
-      </div>
-    </div>
-
     <!-- PROYECCI\xd3N -->
     <div id="v-proyeccion" class="view" style="display:none">
       <div class="proj-hero">
@@ -723,7 +681,7 @@ async function cargarDatos(){
     renderCharts();
     renderProyeccion();
     renderDeuda();
-    actualizarVerificacionEnDatos();
+
     document.getElementById('conn-error').style.display='none';
   } catch(err){
     console.error('Error cargando datos:',err);
@@ -1468,84 +1426,6 @@ buildCustomSelect('g-quien',{kind:'avatar',avatarMap:{'Carlos':'CG','Estefanía'
 
 // =====================================================
 // VERIFICACI\xd3N DE CORTE MENSUAL
-// =====================================================
-function actualizarPanelVerificacion(){
-  const hoy=new Date();
-  const anioActual=hoy.getFullYear(), mesActual=hoy.getMonth()+1;
-  const datosMes=datosCarolina.filter(r=>{
-    const f=parseFechaFlexible(r.fecha);
-    return f && f.year===anioActual && f.month===mesActual;
-  });
-  const sysEfec=datosMes.reduce((a,x)=>a+x.efec,0);
-  const sysBanco=datosMes.reduce((a,x)=>a+x.banco,0);
-  document.getElementById('cv-sis-efec').textContent=fmt(sysEfec);
-  document.getElementById('cv-sis-banco').textContent=fmt(sysBanco);
-
-  // Cargar corte verificado guardado
-  const key='dmf_corte_'+anioActual+'_'+mesActual;
-  const saved=window.dmfStorage.getItem(key);
-  if(saved){
-    try{
-      const d=JSON.parse(saved);
-      document.getElementById('cv-real-efec').value=d.realEfec||'';
-      document.getElementById('cv-real-banco').value=d.realBanco||'';
-      document.getElementById('cv-nota').value=d.nota||'';
-      const badge=document.getElementById('corte-verificado-badge');
-      badge.style.display='inline-block';
-      badge.textContent='✓ Verificado el '+d.fecha+' por '+d.quien;
-      calcDiferencia();
-    }catch(e){}
-  }
-}
-
-function calcDiferencia(){
-  const sysEfecEl=document.getElementById('cv-sis-efec').textContent;
-  const sysBancoEl=document.getElementById('cv-sis-banco').textContent;
-  const parseF=s=>parseFloat(String(s).replace(/[^0-9.-]/g,'').replace(/,/g,''))||0;
-  const sysEfec=parseF(sysEfecEl);
-  const sysBanco=parseF(sysBancoEl);
-  const realEfec=parseFloat(document.getElementById('cv-real-efec').value)||0;
-  const realBanco=parseFloat(document.getElementById('cv-real-banco').value)||0;
-  if(!realEfec && !realBanco){ document.getElementById('cv-dif-box').style.display='none'; return; }
-  const difEfec=realEfec-sysEfec;
-  const difBanco=realBanco-sysBanco;
-  const box=document.getElementById('cv-dif-box');
-  box.style.display='block';
-  const ok=(difEfec===0&&difBanco===0);
-  const warn=(Math.abs(difEfec)>100||Math.abs(difBanco)>100);
-  box.style.background=ok?'var(--green-s)':warn?'var(--red-s)':'var(--amber-s)';
-  box.style.borderColor=ok?'#A3C98A':warn?'#F5AAAA':'#FDE047';
-  const fmtDif=v=>(v>=0?'+':'')+fmt(v);
-  const color=v=>v===0?'var(--green)':v>0?'var(--blue)':'var(--red)';
-  document.getElementById('cv-dif-efec').textContent=fmtDif(difEfec);
-  document.getElementById('cv-dif-efec').style.color=color(difEfec);
-  document.getElementById('cv-dif-banco').textContent=fmtDif(difBanco);
-  document.getElementById('cv-dif-banco').style.color=color(difBanco);
-}
-
-function marcarCorteVerificado(){
-  const realEfec=parseFloat(document.getElementById('cv-real-efec').value)||0;
-  const realBanco=parseFloat(document.getElementById('cv-real-banco').value)||0;
-  const nota=document.getElementById('cv-nota').value.trim();
-  if(!realEfec&&!realBanco){alert('Ingresa al menos el efectivo físico recibido.');return;}
-  const hoy=new Date();
-  const anioActual=hoy.getFullYear(), mesActual=hoy.getMonth()+1;
-  const key='dmf_corte_'+anioActual+'_'+mesActual;
-  const fechaStr=hoy.toLocaleDateString('es-MX',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-  const data={realEfec,realBanco,nota,fecha:fechaStr,quien:usuarioActual};
-  window.dmfStorage.setItem(key,JSON.stringify(data));
-  const badge=document.getElementById('corte-verificado-badge');
-  badge.style.display='inline-block';
-  badge.textContent='✓ Verificado el '+fechaStr+' por '+usuarioActual;
-  calcDiferencia();
-  alert('¡Corte verificado y guardado!');
-}
-
-// Llamar actualizarPanelVerificacion cuando se carguen datos
-const _origCargarDatos=cargarDatos;
-// ya integrado arriba, pero aseguramos que se llame
-
-
 // =====================================================
 // DESCARGA CSV MENSUAL
 // =====================================================
