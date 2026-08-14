@@ -185,18 +185,6 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
   </div>
 </div>
 
-<div id="config" style="display:none;min-height:100vh;display:none;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#EBF3FC 0%,#EEEDFE 100%)">
-  <div style="background:#fff;border-radius:24px;padding:36px 28px;width:100%;max-width:440px;box-shadow:0 16px 48px rgba(0,0,0,.1)">
-    <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#185FA5,#534AB7);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:22px;margin:0 auto 20px">⚙️</div>
-    <div style="text-align:center;font-size:20px;font-weight:700;margin-bottom:8px">Conectar Google Sheet</div>
-    <div style="text-align:center;font-size:13px;color:#5B6678;margin-bottom:24px">Pega la URL de tu Apps Script (mantiene tus datos privados, no el link del Sheet)</div>
-    <label>URL de Apps Script (termina en /exec)</label>
-    <input type="text" id="sheet-url-input" placeholder="https://script.google.com/macros/s/.../exec" style="font-size:13px"/>
-    <button class="btn" onclick="guardarConfig()" style="margin-top:8px">Conectar y continuar</button>
-    <div id="config-err" style="font-size:13px;color:#A32D2D;background:#FCEBEB;border-radius:10px;padding:12px;margin-top:14px;display:none;text-align:center"></div>
-  </div>
-</div>
-
 <div id="app">
   <div class="topbar">
     <div class="tbrand">
@@ -208,7 +196,7 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
         <div style="font-size:13px;font-weight:700" id="uname">Carlos</div>
         <div style="font-size:11px;color:var(--soft)" id="urole">Director general</div>
       </div>
-      <button class="tout" onclick="abrirConfig()" style="margin-right:6px">⚙️</button><button class="tout" onclick="doLogout()">Salir</button>
+      <button class="tout" onclick="doLogout()">Salir</button>
     </div>
   </div>
   <div class="dtabs" id="dtabs">
@@ -477,35 +465,13 @@ window.dmfStorage = (function(){
   }
 })();
 
-let SHEET_URL = window.dmfStorage.getItem('dmf_sheet_url') || '';
+// ============================================================================
+// CONFIGURACION DE CONEXION AL BACKEND (APPS SCRIPT)
+// ============================================================================
+const SHEET_URL = 'https://script.google.com/macros/s/TU_CODIGO_AQUI/exec'; // <-- CAMBIA ESTA URL
 
-function getSheetURL(){
-  const saved = window.dmfStorage.getItem('dmf_sheet_url');
-  if(saved) return saved;
-  return '';
-}
 
-function guardarConfig(){
-  const raw = document.getElementById('sheet-url-input').value.trim();
-  if(!raw || !raw.startsWith('https://script.google.com/')){
-    document.getElementById('config-err').style.display='block';
-    document.getElementById('config-err').textContent='⚠ Pega la URL de tu Apps Script (debe empezar con https://script.google.com/ y terminar en /exec).';
-    return;
-  }
-  SHEET_URL = raw;
-  window.dmfStorage.setItem('dmf_sheet_url', SHEET_URL);
-  document.getElementById('config').style.display='none';
-  document.getElementById('app').style.display='block';
-  cargarDatos();
-  startAutoRefresh();
-}
 
-function abrirConfig(){
-  const savedUrl = window.dmfStorage.getItem('dmf_sheet_url')||'';
-  document.getElementById('sheet-url-input').value = savedUrl;
-  document.getElementById('app').style.display='none';
-  document.getElementById('config').style.display='flex';
-}
 const USERS={'carlos':{pwd:'dir2026',name:'Carlos',role:'Director general',init:'CG'},'estefania':{pwd:'ops2026',name:'Estefanía Longoria',role:'Directora operativa',init:'EL'}};
 const fmt=v=>'$'+parseFloat(v||0).toLocaleString('es-MX',{minimumFractionDigits:0,maximumFractionDigits:0});
 const fmt2=v=>'$'+parseFloat(v||0).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -632,16 +598,8 @@ function doLogin(){
     document.getElementById('g-quien').value=usr.name;
     syncCustomSelect('g-quien');
     buildCharts();
-    const savedSheet = window.dmfStorage.getItem('dmf_sheet_url');
-    if(!savedSheet){
-      document.getElementById('login').style.display='none';
-      document.getElementById('config').style.display='flex';
-      document.getElementById('app').style.display='none';
-    } else {
-      SHEET_URL = savedSheet;
-      cargarDatos();
-      startAutoRefresh();
-    }
+    cargarDatos();
+    startAutoRefresh();
   } else {document.getElementById('lerr').style.display='block';}
 }
 function doLogout(){
