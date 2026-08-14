@@ -1697,7 +1697,7 @@ async function descargarDashboardMensual(){
       container.style.backgroundColor = '#ffffff';
       document.body.appendChild(container);
       
-      // Ventas
+      // Ventas Pie
       const wrapVentas = document.createElement('div');
       wrapVentas.style.width = '450px';
       wrapVentas.style.height = '450px';
@@ -1715,19 +1715,21 @@ async function descargarDashboardMensual(){
         type: 'pie',
         data: {
             labels: ['Plaza del Zapato', 'Obreg\u00F3n', 'Villa Verde', 'Ensenada'],
-            datasets: [{data: vArr, backgroundColor: cols}]
+            datasets: [{data: vArr, backgroundColor: cols, borderColor: '#fff', borderWidth: 2}]
         },
+        plugins: [typeof pieCalloutsPlugin !== 'undefined' ? pieCalloutsPlugin : {}],
         options: {
             responsive: true, maintainAspectRatio: false, animation: false,
+            layout: {padding: {left: 80, right: 80, top: 20, bottom: 20}},
             plugins: {
                 title: { display: true, text: 'Distribución de Ventas', font: {size: 16} },
-                legend: { position: 'bottom' },
-                datalabels: { formatter: (v, c) => { let sum = c.dataset.data.reduce((a,b)=>a+b,0); return sum ? Math.round((v*100)/sum)+'%' : '0%'; }, color: '#fff', font: {weight: 'bold', size:14} }
+                legend: { display: false },
+                datalabels: { display: false }
             }
         }
       });
       
-      // Efectivo
+      // Efectivo Pie
       const wrapEfec = document.createElement('div');
       wrapEfec.style.width = '450px';
       wrapEfec.style.height = '450px';
@@ -1743,14 +1745,16 @@ async function descargarDashboardMensual(){
         type: 'pie',
         data: {
             labels: ['Plaza del Zapato', 'Obreg\u00F3n', 'Villa Verde', 'Ensenada'],
-            datasets: [{data: eArr, backgroundColor: cols}]
+            datasets: [{data: eArr, backgroundColor: cols, borderColor: '#fff', borderWidth: 2}]
         },
+        plugins: [typeof pieCalloutsPlugin !== 'undefined' ? pieCalloutsPlugin : {}],
         options: {
             responsive: true, maintainAspectRatio: false, animation: false,
+            layout: {padding: {left: 80, right: 80, top: 20, bottom: 20}},
             plugins: {
                 title: { display: true, text: 'Distribución de Efectivo', font: {size: 16} },
-                legend: { position: 'bottom' },
-                datalabels: { formatter: (v, c) => { let sum = c.dataset.data.reduce((a,b)=>a+b,0); return sum ? Math.round((v*100)/sum)+'%' : '0%'; }, color: '#fff', font: {weight: 'bold', size:14} }
+                legend: { display: false },
+                datalabels: { display: false }
             }
         }
       });
@@ -1770,48 +1774,106 @@ async function descargarDashboardMensual(){
         y += chartH + 30;
       } catch(e) { console.warn('html2canvas error pies:', e); }
       
-      // Barras
-      const wrapBar = document.createElement('div');
-      wrapBar.style.width = '900px';
-      wrapBar.style.height = '400px';
-      wrapBar.style.padding = '20px';
-      wrapBar.style.backgroundColor = '#ffffff';
-      container.appendChild(wrapBar);
-      const canvasB = document.createElement('canvas');
-      wrapBar.appendChild(canvasB);
+      // LINE CHART - TENDENCIA DEL MES ACTUAL (Semanas)
+      const wrapLineMes = document.createElement('div');
+      wrapLineMes.style.width = '900px';
+      wrapLineMes.style.height = '400px';
+      wrapLineMes.style.padding = '20px';
+      wrapLineMes.style.backgroundColor = '#ffffff';
+      container.appendChild(wrapLineMes);
+      const canvasLM = document.createElement('canvas');
+      wrapLineMes.appendChild(canvasLM);
+
+      // Agrupar datosMes por semanas (dias 1-7, 8-14, 15-21, 22-28, 29+)
+      const semVentas = [0,0,0,0,0];
+      datosMes.forEach(r=>{
+        const f=parseFechaFlexible(r.fecha);
+        if(f) {
+           let idx = Math.floor((f.day-1)/7);
+           if(idx>4) idx=4;
+           semVentas[idx] += (r.venta||0);
+        }
+      });
       
-      const maxVal = Math.max(1, ...vArr);
-      new Chart(canvasB, {
-          type: 'bar',
+      const semLabels = ['Semana 1 (1-7)','Semana 2 (8-14)','Semana 3 (15-21)','Semana 4 (22-28)','Semana 5 (29+)'];
+      // Filter out Sem 5 if it's 0 (month ended at 28)
+      if(semVentas[4] === 0) { semLabels.pop(); semVentas.pop(); }
+      
+      const baseOptions = {responsive: true, maintainAspectRatio: false, animation: false, scales:{x:{ticks:{font:{size:11}}},y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,.05)'}}}};
+      const proyLabelBg={backgroundColor:'rgba(255,255,255,.92)',borderRadius:5,padding:{top:3,bottom:3,left:6,right:6}};
+
+      new Chart(canvasLM, {
+          type: 'line',
           data: {
-              labels: ['Ventas por Clínica'],
-              datasets: [
-                  {label:'Plaza del Zapato',data:[vArr[0]],backgroundColor:'#185FA5',borderRadius:4},
-                  {label:'Obreg\u00F3n',data:[vArr[1]],backgroundColor:'#3B6D11',borderRadius:4},
-                  {label:'Villa Verde',data:[vArr[2]],backgroundColor:'#EF9F27',borderRadius:4},
-                  {label:'Ensenada',data:[vArr[3]],backgroundColor:'#534AB7',borderRadius:4}
-              ]
+              labels: semLabels,
+              datasets: [{
+                  label:'Ventas', data:semVentas, borderColor:'#3B6D11', backgroundColor:'rgba(59,109,17,.07)',
+                  fill:true, tension:.3, pointRadius:6, pointBackgroundColor:'#3B6D11',
+                  datalabels:{align:'top',anchor:'center',offset:6,clamp:true,color:'#3B6D11',font:{weight:'700',size:11},...proyLabelBg,borderColor:'#3B6D11',borderWidth:1,formatter:v=>fmt(v)}
+              }]
           },
           options: {
-              responsive: true, maintainAspectRatio: false, animation: false,
-              plugins: { title: { display: true, text: 'Comparativa de Ventas Mensuales', font: {size: 16} }, legend: { position: 'bottom' } },
-              scales: {
-                  y: { max: maxVal * 1.35, ticks: { callback: v=>'$'+Math.round(v/1000)+'K' }, grid: { color: 'rgba(0,0,0,.05)' } }
-              }
+              ...baseOptions,
+              plugins: { title: { display: true, text: 'Tendencia de Ventas (Mes Descargado)', font: {size: 16} }, legend: { display: false } },
+              layout:{padding:{top:26,right:30,left:10,bottom:10}}
           }
       });
       
       try {
-        const renderedB = await html2canvas(wrapBar, {scale:2, backgroundColor:'#ffffff', logging:false});
-        const imgB = renderedB.toDataURL('image/png');
-        
+        const renderedLM = await html2canvas(wrapLineMes, {scale:2, backgroundColor:'#ffffff', logging:false});
+        const imgLM = renderedLM.toDataURL('image/png');
         const chartW = pageW - margin * 2;
-        const chartH = chartW * (renderedB.height / renderedB.width);
+        const chartH = chartW * (renderedLM.height / renderedLM.width);
         if(y + chartH > pageH - 40) { doc.addPage(); drawHeader(doc); y = 110; }
-        
-        doc.addImage(imgB, 'PNG', margin, y, chartW, chartH);
+        doc.addImage(imgLM, 'PNG', margin, y, chartW, chartH);
         y += chartH + 30;
-      } catch(e) { console.warn('html2canvas error bar:', e); }
+      } catch(e) { console.warn('html2canvas error line mes:', e); }
+
+      // LINE CHART - PROYECCION
+      const p = computeProyeccion();
+      const {MES,ML,TOT} = computeAgg(datosCarolina);
+      const labelsProy=[...ML,'Pr\u00F3x. mes (proj.)'];
+      const realProy=MES.map(m=>TOT[m]);
+      const proyLine=labelsProy.map((_,i)=>i===labelsProy.length-2?TOT[MES[MES.length-1]]:(i===labelsProy.length-1?p.totalProj:null));
+      
+      const wrapProy = document.createElement('div');
+      wrapProy.style.width = '900px';
+      wrapProy.style.height = '400px';
+      wrapProy.style.padding = '20px';
+      wrapProy.style.backgroundColor = '#ffffff';
+      container.appendChild(wrapProy);
+      const canvasProy = document.createElement('canvas');
+      wrapProy.appendChild(canvasProy);
+
+      new Chart(canvasProy, {
+        type:'line',
+        data:{
+          labels: labelsProy,
+          datasets:[
+            {label:'Real',data:[...realProy,null],borderColor:'#185FA5',backgroundColor:'rgba(24,95,165,.07)',fill:true,tension:.3,pointRadius:6,pointBackgroundColor:'#185FA5',
+              datalabels:{align:'top-right',anchor:'center',offset:6,clamp:true,color:'#185FA5',font:{weight:'700',size:11},...proyLabelBg,borderColor:'#185FA5',borderWidth:1,display:c=>c.dataset.data[c.dataIndex]!=null,formatter:v=>fmt(v)}},
+            {label:'Proyecci\u00F3n',data:proyLine,borderColor:'#534AB7',borderDash:[6,4],backgroundColor:'rgba(83,74,183,.07)',fill:true,tension:.3,pointRadius:6,pointBackgroundColor:'#534AB7',
+              datalabels:{align:'top-left',anchor:'center',offset:6,clamp:true,color:'#534AB7',font:{weight:'700',size:11},...proyLabelBg,borderColor:'#534AB7',borderWidth:1,display:c=>c.dataIndex===labelsProy.length-1&&c.dataset.data[c.dataIndex]!=null,formatter:v=>['Proyectado',fmt(v)]}},
+            {label:'Meta',data:labelsProy.map(()=>META_TOTAL),borderColor:'#E24B4A',borderDash:[3,3],pointRadius:0,fill:false,borderWidth:2,
+              datalabels:{align:'bottom',anchor:'center',offset:6,clamp:true,color:'#E24B4A',font:{weight:'700',size:11},...proyLabelBg,borderColor:'#E24B4A',borderWidth:1,display:c=>c.dataIndex===Math.floor(labelsProy.length/2),formatter:v=>'Meta '+fmt(v)}}
+          ]
+        },
+        options:{
+          ...baseOptions,
+          layout:{padding:{top:26,right:70,left:10,bottom:10}},
+          plugins: { title: { display: true, text: 'Proyecci\u00F3n e Hist\u00F3rico de Ventas', font: {size: 16} }, legend: { display: false } }
+        }
+      });
+
+      try {
+        const renderedP = await html2canvas(wrapProy, {scale:2, backgroundColor:'#ffffff', logging:false});
+        const imgP = renderedP.toDataURL('image/png');
+        const chartW = pageW - margin * 2;
+        const chartH = chartW * (renderedP.height / renderedP.width);
+        if(y + chartH > pageH - 40) { doc.addPage(); drawHeader(doc); y = 110; }
+        doc.addImage(imgP, 'PNG', margin, y, chartW, chartH);
+        y += chartH + 30;
+      } catch(e) { console.warn('html2canvas error proy:', e); }
       
       document.body.removeChild(container);
     }
