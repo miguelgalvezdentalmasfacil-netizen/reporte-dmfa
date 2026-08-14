@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -754,15 +754,14 @@ function renderHistorial(){
     const key = d.capturado + '||' + d.clinica + '||' + d.fecha;
     const v = verificaciones.find(x => x.key === key);
     
+    let estado = v ? (v.estado || 'sin_revisar') : 'sin_revisar';
     let badgeHtml = '<span class="badge" style="background:#E4E7EC;color:var(--soft)">Sin revisar</span>';
-    if(v) {
-      if(v.verificado) {
-        badgeHtml = '<span class="badge ok">✓ Coincide</span>';
-        countOk++;
-      } else {
-        badgeHtml = '<span class="badge no">✗ Faltó $' + fmt(v.montoFaltante) + '</span>';
-        countDif++;
-      }
+    if(estado === 'coincide') {
+      badgeHtml = '<span class="badge ok">✓ Coincide</span>';
+      countOk++;
+    } else if(estado === 'no_coincide') {
+      badgeHtml = '<span class="badge no">✗ Faltó $' + fmt(v.montoFaltante) + '</span>';
+      countDif++;
     } else {
       countSin++;
     }
@@ -779,8 +778,8 @@ function renderHistorial(){
         <span class="hv v">💰 ${fmt(d.venta)}</span><span class="hv b">🏦 ${fmt(d.banco)}</span><span class="hv e">💵 ${fmt(d.efec)}</span>
       </div>
       <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-        <button class="add-btn" style="background:var(--green-s);color:var(--green);font-size:12px;padding:6px 12px" onclick="guardarVerificacion('${keySafe}', true, 0, this)">✓ Coincide</button>
-        <button class="add-btn" style="background:var(--red-s);color:var(--red);font-size:12px;padding:6px 12px" onclick="mostrarInputFaltante(this)">✗ No coincide</button>
+        <button class="add-btn" style="background:var(--green-s);color:var(--green);font-size:12px;padding:6px 12px;opacity:${estado==='coincide'?'1':'0.6'}" onclick="toggleCoincide('${keySafe}', '${estado}', this)">✓ Coincide</button>
+        <button class="add-btn" style="background:var(--red-s);color:var(--red);font-size:12px;padding:6px 12px;opacity:${estado==='no_coincide'?'1':'0.6'}" onclick="toggleNoCoincide('${keySafe}', '${estado}', this)">✗ No coincide</button>
         <div class="faltante-box" style="display:none;align-items:center;gap:6px;margin-top:4px;width:100%">
           <input type="number" placeholder="¿Cuánto faltó? ($)" style="width:140px;padding:6px 10px;font-size:12px;margin:0" step="0.01">
           <button class="add-btn" style="background:var(--blue);color:#fff;font-size:12px;padding:6px 12px" onclick="enviarNoCoincide('${keySafe}', this)">Guardar</button>
@@ -803,19 +802,31 @@ function renderHistorial(){
   list.innerHTML = htmlList;
 }
 
-function mostrarInputFaltante(btn) {
-  const box = btn.nextElementSibling;
-  box.style.display = box.style.display === 'none' ? 'flex' : 'none';
+function toggleCoincide(key, estadoActual, btn) {
+  if(estadoActual === 'coincide') {
+    guardarVerificacion(key, 'sin_revisar', 0, btn);
+  } else {
+    guardarVerificacion(key, 'coincide', 0, btn);
+  }
+}
+
+function toggleNoCoincide(key, estadoActual, btn) {
+  if(estadoActual === 'no_coincide') {
+    guardarVerificacion(key, 'sin_revisar', 0, btn);
+  } else {
+    const box = btn.nextElementSibling;
+    box.style.display = box.style.display === 'none' ? 'flex' : 'none';
+  }
 }
 
 function enviarNoCoincide(key, btn) {
   const input = btn.previousElementSibling;
   const val = parseFloat(input.value);
   if(isNaN(val) || val <= 0) { alert('Ingresa un monto faltante válido mayor a 0'); return; }
-  guardarVerificacion(key, false, val, btn);
+  guardarVerificacion(key, 'no_coincide', val, btn);
 }
 
-async function guardarVerificacion(key, verificado, montoFaltante, btn) {
+async function guardarVerificacion(key, estado, montoFaltante, btn) {
   const originalText = btn.textContent;
   btn.textContent = '⏳...';
   btn.disabled = true;
@@ -823,7 +834,7 @@ async function guardarVerificacion(key, verificado, montoFaltante, btn) {
     const params = new URLSearchParams();
     params.append('action', 'verificar');
     params.append('key', key);
-    params.append('verificado', verificado);
+    params.append('estado', estado);
     params.append('montoFaltante', montoFaltante);
     params.append('nota', '');
     params.append('quien', usuarioActual);
@@ -835,11 +846,14 @@ async function guardarVerificacion(key, verificado, montoFaltante, btn) {
     });
     if(!r.ok) throw new Error('HTTP '+r.status);
     
-    // Update local state
-    const vIdx = verificaciones.findIndex(x => x.key === key);
-    const newVal = {key, verificado, montoFaltante, nota:'', quien:usuarioActual};
-    if(vIdx >= 0) verificaciones[vIdx] = newVal;
-    else verificaciones.push(newVal);
+    if(estado === 'sin_revisar') {
+      verificaciones = verificaciones.filter(x => x.key !== key);
+    } else {
+      const vIdx = verificaciones.findIndex(x => x.key === key);
+      const newVal = {key, estado, montoFaltante, nota:'', quien:usuarioActual};
+      if(vIdx >= 0) verificaciones[vIdx] = newVal;
+      else verificaciones.push(newVal);
+    }
     
     renderHistorial();
   } catch(e) {
