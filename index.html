@@ -627,6 +627,10 @@ async function cargarDatos(){
     if(!r.ok) throw new Error('HTTP '+r.status);
     const json=await r.json();
     if(!json || !Array.isArray(json.ventas)) throw new Error('Respuesta inesperada del Apps Script');
+
+    const abiertoDuranteFetch = Array.from(document.querySelectorAll('.faltante-box')).some(b => b.style.display !== 'none');
+    if (abiertoDuranteFetch) return;
+
     datosCarolina = json.ventas;
     gastos = Array.isArray(json.gastos) ? json.gastos : [];
     verificaciones = Array.isArray(json.verificaciones) ? json.verificaciones : [];
@@ -741,7 +745,7 @@ function renderHistorial(){
         <button class="add-btn" style="background:var(--green-s);color:var(--green);font-size:12px;padding:6px 12px;opacity:${estado==='coincide'?'1':'0.6'}" onclick="toggleCoincide('${keySafe}', '${estado}', this)">✓ Coincide</button>
         <button class="add-btn" style="background:var(--red-s);color:var(--red);font-size:12px;padding:6px 12px;opacity:${estado==='no_coincide'?'1':'0.6'}" onclick="toggleNoCoincide('${keySafe}', '${estado}', this)">✗ No coincide</button>
         <div class="faltante-box" style="display:none;align-items:center;gap:6px;margin-top:4px;width:100%">
-          <input type="number" placeholder="¿Cuánto faltó? ($)" style="width:140px;padding:6px 10px;font-size:12px;margin:0" step="0.01">
+          <input type="number" inputmode="decimal" placeholder="¿Cuánto faltó? ($)" style="width:140px;padding:6px 10px;font-size:12px;margin:0" step="0.01">
           <button class="add-btn" style="background:var(--blue);color:#fff;font-size:12px;padding:6px 12px" onclick="enviarNoCoincide('${keySafe}', this)">Guardar</button>
         </div>
       </div>
