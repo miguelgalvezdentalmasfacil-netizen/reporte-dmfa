@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -306,7 +306,7 @@ select option{padding:12px 14px;font-size:15px;color:var(--ink);background:var(-
     <!-- DASHBOARD MENSUAL -->
     <div id="v-dashboard" class="view" style="display:none">
       <p class="sec">Dashboard mensual</p>
-        <button class="tout" style="width:auto" id="btn-dash-pdf" onclick="descargarDashboardMensual()"><svg class="i-svg i-mr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg> Descargar PDF</button>
+        <button class="tout" style="width:auto" id="btn-dash-pdf" onclick="abrirModalDescarga('pdf')"><svg class="i-svg i-mr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg> Descargar PDF</button>
       </div>
       <div id="tri-capture">
         <div class="mgrid" id="tri-metrics"></div>
@@ -927,7 +927,7 @@ function renderDashboardMensual(){
   }).join('');
 
   if(chTrimestral) chTrimestral.destroy();
-  const dlBarTop={anchor:'end',align:'top',color:'#3A4150',font:{weight:'700',size:10},clamp:true,display:c=>c.dataset.data[c.dataIndex]>0,formatter:(v,c)=>window.innerWidth<768?'$'+Math.round(v/1000)+'K':[c.dataset.label,fmt(v)],rotation:(c)=>window.innerWidth<768?-90:0};
+  const dlBarTop={anchor:'end',align:'top',color:'#3A4150',font:{weight:'700',size:10},clamp:true,display:c=>window.innerWidth>=768 && c.dataset.data[c.dataIndex]>0,formatter:(v,c)=>window.innerWidth<768?'$'+Math.round(v/1000)+'K':[c.dataset.label,fmt(v)],rotation:(c)=>window.innerWidth<768?-90:0};
   const keysW=Object.keys(W).sort();
   const maxW=keysW.length ? Math.max(1, ...keysW.flatMap(k=>[W[k].tj,W[k].ob,W[k].vv,W[k].en])) : 1; 
   
@@ -1327,8 +1327,8 @@ function renderCharts(){
   }
 
   if(chMetas) chMetas.destroy();
-  const dlBar={anchor:'center',align:'center',color:'#fff',font:{weight:'700',size:10},clamp:true,display:c=>c.dataset.data[c.dataIndex]>0,formatter:(v,c)=>[c.dataset.label,fmt(v)]};
-  const dlBarTop={anchor:'end',align:'top',color:'#3A4150',font:{weight:'700',size:10},clamp:true,display:c=>c.dataset.data[c.dataIndex]>0,formatter:(v,c)=>window.innerWidth<768?'$'+Math.round(v/1000)+'K':[c.dataset.label,fmt(v)],rotation:(c)=>window.innerWidth<768?-90:0};
+  const dlBar={anchor:'center',align:'center',color:'#fff',font:{weight:'700',size:10},clamp:true,display:c=>window.innerWidth>=768 && c.dataset.data[c.dataIndex]>0,formatter:(v,c)=>[c.dataset.label,fmt(v)]};
+  const dlBarTop={anchor:'end',align:'top',color:'#3A4150',font:{weight:'700',size:10},clamp:true,display:c=>window.innerWidth>=768 && c.dataset.data[c.dataIndex]>0,formatter:(v,c)=>window.innerWidth<768?'$'+Math.round(v/1000)+'K':[c.dataset.label,fmt(v)],rotation:(c)=>window.innerWidth<768?-90:0};
   const maxMetasVal=Math.max(1,META,...MES.flatMap(m=>[D[m].tj,D[m].ob,D[m].vv,D[m].en]));
   chMetas=new Chart(document.getElementById('cMetas'),{type:'bar',data:{labels:ML,datasets:[{label:'Plaza del Zapato',data:MES.map(m=>D[m].tj),backgroundColor:'#185FA5',borderRadius:4,borderSkipped:false,datalabels:dlBarTop},{label:'Obregón',data:MES.map(m=>D[m].ob),backgroundColor:'#3B6D11',borderRadius:4,borderSkipped:false,datalabels:dlBarTop},{label:'Villa Verde',data:MES.map(m=>D[m].vv),backgroundColor:'#EF9F27',borderRadius:4,borderSkipped:false,datalabels:dlBarTop},{label:'Ensenada',data:MES.map(m=>D[m].en),backgroundColor:'#534AB7',borderRadius:4,borderSkipped:false,datalabels:dlBarTop},{label:'Meta',type:'line',data:MES.map(()=>META),borderColor:'#E24B4A',borderWidth:2,borderDash:[6,4],pointRadius:0,fill:false,order:0,datalabels:{display:false}}]},options:{...base,layout:{padding:{top:34}},scales:{x:{ticks:{font:{size:11}}},y:{max:maxMetasVal*1.35,ticks:{callback:v=>'$'+Math.round(v/1000)+'K',font:{size:10}},grid:{color:'rgba(0,0,0,.05)'}}}}});
 
@@ -1404,6 +1404,18 @@ function csvEscape(v){
   return /[",\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
 }
 
+function abrirModalDescarga(tipo) {
+  const modal = document.getElementById('modal-descarga');
+  if(modal) modal.style.display = 'flex';
+}
+function cerrarModalDescarga() {
+  const modal = document.getElementById('modal-descarga');
+  if(modal) modal.style.display = 'none';
+}
+function confirmarDescarga() {
+  cerrarModalDescarga();
+  descargarDashboardMensual();
+}
 function descargarMensual(){
   let hoy=new Date();
   let anioActual=hoy.getFullYear(), mesActual=hoy.getMonth()+1;
