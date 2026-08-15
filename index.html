@@ -1406,7 +1406,50 @@ function csvEscape(v){
 
 function abrirModalDescarga(tipo) {
   const modal = document.getElementById('modal-descarga');
-  if(modal) modal.style.display = 'flex';
+  const select = document.getElementById('mes-descarga-select');
+  if (modal && select) {
+    const mesesSet = new Set();
+    // datosCarolina holds the array of sales data loaded from the backend
+    if (typeof datosCarolina !== 'undefined' && Array.isArray(datosCarolina)) {
+      datosCarolina.forEach(r => {
+        const f = parseFechaFlexible(r.fecha);
+        if (f && f.year && f.month) {
+          mesesSet.add(f.year + '-' + f.month);
+        }
+      });
+    }
+
+    const mesesArr = Array.from(mesesSet).map(val => {
+      const parts = val.split('-');
+      return { 
+        val: val, 
+        year: parseInt(parts[0], 10), 
+        month: parseInt(parts[1], 10) 
+      };
+    }).sort((a, b) => {
+      if (b.year !== a.year) return b.year - a.year;
+      return b.month - a.month;
+    });
+
+    const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    select.innerHTML = '';
+    if (mesesArr.length === 0) {
+      const opt = document.createElement('option');
+      opt.value = '';
+      opt.textContent = 'No hay datos disponibles';
+      select.appendChild(opt);
+    } else {
+      mesesArr.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.val;
+        opt.textContent = nombresMeses[m.month - 1] + ' ' + m.year;
+        select.appendChild(opt);
+      });
+    }
+
+    modal.style.display = 'flex';
+  }
 }
 function cerrarModalDescarga() {
   const modal = document.getElementById('modal-descarga');
