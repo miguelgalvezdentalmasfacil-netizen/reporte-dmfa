@@ -795,20 +795,22 @@ async function guardarVerificacion(key, estado, montoFaltante, btn) {
   btn.textContent = '⏳...';
   btn.disabled = true;
   try {
-    const params = new URLSearchParams();
-    params.append('action', 'verificar');
-    params.append('key', key);
-    params.append('estado', estado);
-    params.append('montoFaltante', montoFaltante);
-    params.append('nota', '');
-    params.append('quien', usuarioActual);
+    const payload = {
+      action: 'verificar',
+      key: key,
+      estado: estado,
+      montoFaltante: montoFaltante,
+      nota: '',
+      quien: usuarioActual
+    };
     
     const r = await fetch(SHEET_URL, {
         method:'POST', 
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: params
+        body: JSON.stringify(payload)
     });
     if(!r.ok) throw new Error('HTTP '+r.status);
+    const data = await r.json();
+    if(!data.ok) throw new Error(data.error || 'Error desconocido del backend');
     
     if(estado === 'sin_revisar') {
       verificaciones = verificaciones.filter(x => x.key !== key);
