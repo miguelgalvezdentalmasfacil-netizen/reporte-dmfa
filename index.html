@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -617,6 +617,11 @@ function showTab(t){
 document.querySelectorAll('.bntab,.dtab').forEach(b=>{b.addEventListener('click',()=>showTab(b.dataset.tab));});
 
 async function cargarDatos(){
+  const hayFaltanteAbierto = Array.from(document.querySelectorAll('.faltante-box')).some(b => b.style.display !== 'none');
+  const modalDescarga = document.getElementById('modal-descarga');
+  const hayModalAbierto = modalDescarga && modalDescarga.style.display !== 'none';
+  if (hayFaltanteAbierto || hayModalAbierto) return;
+
   try{
     const r=await fetch(SHEET_URL, {cache:"no-store"});
     if(!r.ok) throw new Error('HTTP '+r.status);
